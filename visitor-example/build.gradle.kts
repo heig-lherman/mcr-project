@@ -17,3 +17,8 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+task("run", JavaExec::class) {
+    mainClass = "heig.mcr.visitor.Main"
+    classpath = sourceSets["main"].runtimeClasspath
+}
