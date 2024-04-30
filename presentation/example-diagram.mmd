@@ -1,0 +1,45 @@
+classDiagram
+    direction RL
+
+    class InteractionVisitor {
+        +interactWith(c: Circle)
+        +interactWith(c: Triangle)
+    }
+    <<interface>> InteractionVisitor
+    
+    class Interactable {
+        +acceptInteraction(v: InteractionVisitor)
+    }
+    <<interface>> Interactable
+
+    Interactable <|.. Circle
+    Interactable <|.. Triangle
+
+    class Circle {
+
+    }
+
+    class Triangle {
+
+    }
+
+    Circle <.. InteractionVisitor
+    Triangle <.. InteractionVisitor
+    InteractionVisitor <|.. PlayerInteractionVisitor
+
+    class PlayerInteractionVisitor {
+
+    }
+
+    class Player {
+
+    }
+
+    class Interactor {
+        +interactWith(i: Interactable)
+    }
+    <<interface>> Interactor
+
+    Interactor <|.. Player
+    PlayerInteractionVisitor <-- Player : handler
+
