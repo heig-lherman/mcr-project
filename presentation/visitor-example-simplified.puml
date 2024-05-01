@@ -1,0 +1,85 @@
+@startuml
+
+' Style
+skinparam classAttributeIconSize 0
+scale 2
+hide empty members
+
+
+' hacks
+CircleEntity -[hidden]- PacmanEntity
+CircleEntity -[hidden]- TriangleEntity
+
+interface Interactable {
++ acceptInteraction(v: InteractionVisitor)
+}
+
+class TriangleEntity {
++ acceptInteraction(v: InteractionVisitor)
+}
+
+interface Interactor {
++ interactWith(other: Interactable)
+}
+
+class CircleEntity {
++ acceptInteraction(v: InteractionVisitor)
+}
+
+abstract class Entity {
+' - shape: MovableShape
+' - color: Color
+' - coordinates: DiscreteCoordinates
+' + getShape(): MovableShape
+' + getColor(): Color
+' + getCoordinates(): DiscreteCoordinates
+' # setCoordinates(coordinates: DiscreteCoordinates)
+' # setColor(color: Color)
+' # setShape(shape: MovableShape)
+' + draw(canvas: Graphics2D)
+}
+
+
+class PacmanEntity {
++ acceptInteraction(v: InteractionVisitor)
+}
+
+abstract class AbstractInteractionVisitor {
++ interactWith(player: Player)
++ interactWith(circleEntity: CircleEntity)
++ interactWith(triangleEntity: TriangleEntity)
++ interactWith(pacmanEntity: PacmanEntity)
+}
+
+interface InteractionVisitor {
++ interactWith(player: Player)
++ interactWith(circleEntity: CircleEntity)
++ interactWith(triangleEntity: TriangleEntity)
++ interactWith(pacmanEntity: PacmanEntity)
+}
+
+class Player {
+- handler: PlayerInteractionVisitor
++ interactWith(other: Interactable)
++ acceptInteraction(v: InteractionVisitor)
+}
+
+
+class Player$PlayerInteractionVisitor {
++ interactWith(circleEntity: CircleEntity)
++ interactWith(triangleEntity: TriangleEntity)
++ interactWith(pacmanEntity: PacmanEntity)
+}
+
+
+
+Entity <|-- TriangleEntity
+Entity <|-- CircleEntity
+Interactable <|.. Entity
+Entity <|-- PacmanEntity
+InteractionVisitor <|.. AbstractInteractionVisitor
+Interactor <|.. Player
+Entity <|-- Player
+Player +.. Player$PlayerInteractionVisitor
+AbstractInteractionVisitor <|-- Player$PlayerInteractionVisitor
+@enduml
