@@ -7,14 +7,15 @@ hide empty members
 
 
 ' hacks
-CircleEntity -[hidden]- PacmanEntity
-CircleEntity -[hidden]- TriangleEntity
+' Circle -[hidden]- Triangle
+
+Player -- PlayerInteractionVisitor: handler >
 
 interface Interactable {
 + acceptInteraction(v: InteractionVisitor)
 }
 
-class TriangleEntity {
+class Triangle {
 + acceptInteraction(v: InteractionVisitor)
 }
 
@@ -22,7 +23,7 @@ interface Interactor {
 + interactWith(other: Interactable)
 }
 
-class CircleEntity {
+class Circle {
 + acceptInteraction(v: InteractionVisitor)
 }
 
@@ -39,47 +40,34 @@ abstract class Entity {
 ' + draw(canvas: Graphics2D)
 }
 
-
-class PacmanEntity {
-+ acceptInteraction(v: InteractionVisitor)
-}
-
 abstract class AbstractInteractionVisitor {
-+ interactWith(player: Player)
-+ interactWith(circleEntity: CircleEntity)
-+ interactWith(triangleEntity: TriangleEntity)
-+ interactWith(pacmanEntity: PacmanEntity)
++ interactWith(circle: Circle)
++ interactWith(triangle: Triangle)
 }
 
 interface InteractionVisitor {
-+ interactWith(player: Player)
-+ interactWith(circleEntity: CircleEntity)
-+ interactWith(triangleEntity: TriangleEntity)
-+ interactWith(pacmanEntity: PacmanEntity)
++ interactWith(circle: Circle)
++ interactWith(triangle: Triangle)
 }
 
 class Player {
-- handler: PlayerInteractionVisitor
 + interactWith(other: Interactable)
 + acceptInteraction(v: InteractionVisitor)
 }
 
 
-class Player$PlayerInteractionVisitor {
-+ interactWith(circleEntity: CircleEntity)
-+ interactWith(triangleEntity: TriangleEntity)
-+ interactWith(pacmanEntity: PacmanEntity)
+class PlayerInteractionVisitor {
++ interactWith(circle: Circle)
++ interactWith(triangle: Triangle)
 }
 
 
 
-Entity <|-- TriangleEntity
-Entity <|-- CircleEntity
+Entity <|-- Triangle
+Entity <|-- Circle
 Interactable <|.. Entity
-Entity <|-- PacmanEntity
 InteractionVisitor <|.. AbstractInteractionVisitor
 Interactor <|.. Player
-Entity <|-- Player
-Player +.. Player$PlayerInteractionVisitor
-AbstractInteractionVisitor <|-- Player$PlayerInteractionVisitor
+Player +-- PlayerInteractionVisitor
+AbstractInteractionVisitor <|-- PlayerInteractionVisitor
 @enduml
