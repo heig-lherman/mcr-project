@@ -15,7 +15,7 @@ public abstract class SpriteRegister {
         return spriteCache.computeIfAbsent(resource, this::loadResource);
     }
 
-    public AnimatedSprite createAnimation(Sprite resource, int frames, int delay) {
+    public AnimatedSprite createAnimation(Sprite resource, int frames, int delay, boolean loop) {
         int frameWidth = resource.getWidth() / frames;
 
         Sprite[] animation = new Sprite[frames];
@@ -26,7 +26,7 @@ public abstract class SpriteRegister {
             ));
         }
 
-        return new AnimatedSprite(animation, delay);
+        return new AnimatedSprite(animation, delay, loop);
     }
 
 

@@ -1,11 +1,17 @@
 package heig.mcr.visitor.board;
 
+import java.util.stream.Stream;
+
 public final class Board {
 
     private final Cell[][] cells;
 
     public Board(Cell[][] cells) {
         this.cells = cells;
+    }
+
+    public Stream<Cell> streamCells() {
+        return Stream.of(cells).flatMap(Stream::of);
     }
 
     public int getWidth() {

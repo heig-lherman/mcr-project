@@ -1,8 +1,5 @@
 package heig.mcr.visitor.math;
 
-import java.io.Serializable;
-
-
 /**
  * A region of interest is a rectangle in an image.
  * The region is defined by its top left corner (x, y) and its width and height (w, h).
@@ -12,7 +9,7 @@ import java.io.Serializable;
  * @param w width in number of pixels
  * @param h height in number of pixels
  */
-public record RegionOfInterest(int x, int y, int w, int h) implements Serializable {
+public record RegionOfInterest(int x, int y, int w, int h) {
 
     /**
      * @return top left pixel x coordinate
