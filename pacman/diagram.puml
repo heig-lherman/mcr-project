@@ -8,37 +8,20 @@ hide empty members
 skinparam classAttributeIconSize 0
 
 ' Additions
+hide Main
+
+' Board "1"-"*" Cell: contains >
+' Entity "1"-"1" Cell: placed on >
+' SpriteRegister "1"-"*" Sprite: puts in cache >
+
 
 ' REMOVE
 
 ' ENDSTATIC
-
-class RegionOfInterest {
-	- x: int
-	- y: int
-	- w: int
-	- h: int
-	+ x1(): int
-	+ x2(): int
-	+ y1(): int
-	+ y2(): int
-	+ x(): int
-	+ h(): int
-	+ w(): int
-	+ y(): int
-}
-
-
 class GroundCell {
 	+ isWalkable(): boolean
 	+ getSprite(): Sprite
 }
-
-class WallSprite {
-	- {static} WALL_COLOR: Color
-	+ slice(roi: RegionOfInterest): Sprite
-}
-
 
 class Main {
 	+ {static} main(args: String[]): void
@@ -57,43 +40,42 @@ abstract class Cell {
 }
 
 
-abstract class AbstractInteractionVisitor {
-	+ interactWith(player: Player): void
-	+ interactWith(circleEntity: CircleEntity): void
-	+ interactWith(triangleEntity: TriangleEntity): void
-	+ interactWith(pacmanEntity: PacmanEntity): void
+class Level {
+	- moveLock: Object
+	- startLock: Object
+	- board: Board
+	- ghostThreads: Map<Ghost,ExecutorService>
+	- observers: List<LevelObserver>
+	- players: List<Player>
+	- running: boolean
+	- addObserver(observer: LevelObserver): void
+	- removeObserver(observer: LevelObserver): void
+	+ move(entity: Entity, direction: Direction): void
+	+ start(): void
+	+ stop(): void
+	- startThreads(): void
+	- stopThreads(): void
+	- updateObservers(): void
+	+ hasAlivePlayer(): boolean
+	+ countRemainingPellets(): long
 }
 
-abstract class SpriteRegister {
-	- spriteCache: Map<String,Sprite>
-	+ loadSprite(resource: String): Sprite
-	+ createAnimation(resource: Sprite, frames: int, delay: int): AnimatedSprite
-	- loadResource(resource: String): Sprite
+
+class Level$GhostTask {
+	- ghost: Ghost
+	+ run(): void
 }
 
 
-class Player {
+interface Level$LevelObserver {
+	~ onLevelWon(): void
+	~ onLevelLost(): void
 }
+
 abstract class Ghost {
+	+ {abstract}nextMove(): Direction
+	+ getMoveInterval(): int
 }
-class ImageSprite {
-	- image: Image
-	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
-	+ getWidth(): int
-	+ getHeight(): int
-	- withinBounds(x: int, y: int): boolean
-}
-
-
-class Board {
-	- cells: Cell[][]
-	+ getWidth(): int
-	+ getHeight(): int
-	+ getCell(x: int, y: int): Cell
-	+ withinBounds(x: int, y: int): boolean
-}
-
 
 class DiscreteCoordinates {
 	- x: int
@@ -106,10 +88,14 @@ class DiscreteCoordinates {
 	+ getNeighbours(): List<DiscreteCoordinates>
 	+ equals(o: Object): boolean
 	+ hashCode(): int
-	+ x(): int
 	+ y(): int
+	+ x(): int
 }
 
+
+interface Interactor {
+	~ interactWith(other: Interactable): void
+}
 
 enum Direction {
 	+ UP: 
@@ -125,38 +111,13 @@ enum Direction {
 }
 
 
-class GameWindow {
-	- {static} INSTANCE: GameWindow
-	- frame: JFrame
-	- contentPane: GraphicsPanel
-	- player: Player
-	+ {static} getInstance(): GameWindow
-	+ spawn(entity: Drawable): void
-	+ despawn(entity: Entity): void
-	+ implode(): void
-	+ show(): void
-	+ update(): void
-}
-
-
-class GameWindow$GraphicsPanel {
-	- entities: List<Drawable>
-	- pacmanBg: BufferedImage
-	- useBackground: boolean
-	# paintComponent(g: Graphics): void
-}
-
-
-class GameWindow$PlayerKeyListener {
-	+ keyPressed(e: KeyEvent): void
-	+ shiftCoordinates(e: KeyEvent, orig: DiscreteCoordinates): DiscreteCoordinates
-}
-
 interface InteractionVisitor {
 	~ interactWith(player: Player): void
-	~ interactWith(circleEntity: CircleEntity): void
-	~ interactWith(triangleEntity: TriangleEntity): void
-	~ interactWith(pacmanEntity: PacmanEntity): void
+	~ interactWith(player: Pellet): void
+}
+
+interface Interactable {
+	~ acceptInteraction(v: InteractionVisitor): void
 }
 
 class DefaultSprite {
@@ -209,6 +170,123 @@ class Vector {
 }
 
 
+class GroundSprite {
+	- {static} GROUND_COLOR: Color
+	+ slice(roi: RegionOfInterest): Sprite
+}
+
+
+class ColorSprite {
+	- color: Color
+	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
+	+ slice(roi: RegionOfInterest): Sprite
+	+ getWidth(): int
+	+ getHeight(): int
+}
+
+
+class RegionOfInterest {
+	- x: int
+	- y: int
+	- w: int
+	- h: int
+	+ x1(): int
+	+ x2(): int
+	+ y1(): int
+	+ y2(): int
+	+ y(): int
+	+ w(): int
+	+ x(): int
+	+ h(): int
+}
+
+
+class Pellet {
+	+ getSprite(): Sprite
+	+ acceptInteraction(v: InteractionVisitor): void
+}
+
+class WallSprite {
+	- {static} WALL_COLOR: Color
+	+ slice(roi: RegionOfInterest): Sprite
+}
+
+
+abstract class AbstractInteractionVisitor {
+	+ interactWith(player: Player): void
+	+ interactWith(player: Pellet): void
+}
+
+abstract class SpriteRegister {
+	- spriteCache: Map<String,Sprite>
+	+ loadSprite(resource: String): Sprite
+	+ createAnimation(resource: Sprite, frames: int, delay: int, loop: boolean): AnimatedSprite
+	- loadResource(resource: String): Sprite
+}
+
+
+class Player {
+	- normalHandler: InteractionVisitor
+	- directedSprites: Map<Direction,AnimatedSprite>
+	- deathSprites: AnimatedSprite
+	- alive: boolean
+	+ isAlive(): boolean
+	+ getSprite(): Sprite
+	+ kill(): void
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+}
+
+
+class Player$NormalInteractionHandler {
+}
+class ImageSprite {
+	- image: Image
+	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
+	+ slice(roi: RegionOfInterest): Sprite
+	+ getWidth(): int
+	+ getHeight(): int
+	- withinBounds(x: int, y: int): boolean
+}
+
+
+class Board {
+	- cells: Cell[][]
+	+ streamCells(): Stream<Cell>
+	+ getWidth(): int
+	+ getHeight(): int
+	+ getCell(x: int, y: int): Cell
+	+ withinBounds(x: int, y: int): boolean
+}
+
+
+class GameWindow {
+	- {static} INSTANCE: GameWindow
+	- frame: JFrame
+	- contentPane: GraphicsPanel
+	- player: Player
+	+ {static} getInstance(): GameWindow
+	+ spawn(entity: Drawable): void
+	+ despawn(entity: Entity): void
+	+ implode(): void
+	+ show(): void
+	+ update(): void
+}
+
+
+class GameWindow$GraphicsPanel {
+	- entities: List<Drawable>
+	- pacmanBg: BufferedImage
+	- useBackground: boolean
+	# paintComponent(g: Graphics): void
+}
+
+
+class GameWindow$PlayerKeyListener {
+	+ keyPressed(e: KeyEvent): void
+	+ shiftCoordinates(e: KeyEvent, orig: DiscreteCoordinates): DiscreteCoordinates
+}
+
 interface Sprite {
 	~ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
 	~ slice(roi: RegionOfInterest): Sprite
@@ -229,17 +307,17 @@ abstract class Entity {
 
 
 class PacmanSprites {
+	- {static} SPRITE_SIZE: int
+	- {static} ANIMATION_DELAY: int
+	- {static} DIRECTED_ORDER: Direction[]
 	- {static} INSTANCE: PacmanSprites
+	+ getPacman(): Map<Direction,AnimatedSprite>
+	+ getPacmanDeath(): AnimatedSprite
 	+ getWall(): Sprite
 	+ getGround(): Sprite
 	+ getPellet(): Sprite
+	- loadDirectedSprites(resource: String, frames: int): Map<Direction,AnimatedSprite>
 	+ {static} getInstance(): PacmanSprites
-}
-
-
-class GroundSprite {
-	- {static} GROUND_COLOR: Color
-	+ slice(roi: RegionOfInterest): Sprite
 }
 
 
@@ -263,31 +341,31 @@ class AnimatedSprite {
 }
 
 
-class ColorSprite {
-	- color: Color
-	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
-	+ getWidth(): int
-	+ getHeight(): int
-}
-
-
 
 
 Cell <|-- GroundCell
+Level +-- Level$GhostTask
+Runnable <|.. Level$GhostTask
+Level +-- Level$LevelObserver
+Interactor <|.. Ghost
+Entity <|-- Ghost
+Sprite <|.. DefaultSprite
+Cell <|-- WallCell
+ColorSprite <|-- GroundSprite
+Sprite <|.. ColorSprite
+Entity <|-- Pellet
 ColorSprite <|-- WallSprite
 InteractionVisitor <|.. AbstractInteractionVisitor
+Interactor <|.. Player
 Entity <|-- Player
-Entity <|-- Ghost
+Player +-- Player$NormalInteractionHandler
+AbstractInteractionVisitor <|-- Player$NormalInteractionHandler
 Sprite <|.. ImageSprite
 GameWindow +-- GameWindow$GraphicsPanel
 JPanel <|-- GameWindow$GraphicsPanel
 GameWindow +-- GameWindow$PlayerKeyListener
 KeyAdapter <|-- GameWindow$PlayerKeyListener
-Sprite <|.. DefaultSprite
-Cell <|-- WallCell
+Interactable <|.. Entity
 SpriteRegister <|-- PacmanSprites
-ColorSprite <|-- GroundSprite
 Sprite <|.. AnimatedSprite
-Sprite <|.. ColorSprite
 @enduml
