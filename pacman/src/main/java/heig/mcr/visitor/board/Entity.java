@@ -1,6 +1,5 @@
 package heig.mcr.visitor.board;
 
-import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
 
@@ -10,7 +9,7 @@ import heig.mcr.visitor.window.sprite.Sprite;
 public abstract class Entity implements Interactable {
 
     private Cell cell;
-    private Direction direction;
+    private Direction direction = Direction.UP;
 
     public Direction getDirection() {
         return direction;

@@ -19,7 +19,7 @@ public abstract class Cell {
     }
 
     public Collection<Entity> getOccupants() {
-        return Collections.unmodifiableCollection(occupants);
+        return Set.copyOf(occupants);
     }
 
     public void addOccupant(Entity entity) {

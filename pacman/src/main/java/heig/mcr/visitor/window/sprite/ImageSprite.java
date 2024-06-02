@@ -18,25 +18,26 @@ public class ImageSprite implements Sprite {
 
     @Override
     public void draw(Graphics graphics, int x, int y, int width, int height) {
-        graphics.drawImage(
-                image, x, y, x + width, x + height, 0, 0,
-                image.getWidth(null), image.getHeight(null), null
-        );
+        var img = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        graphics.drawImage(img, x + (getWidth() / 2), y + (getHeight() / 2), null);
     }
 
     @Override
     public Sprite slice(RegionOfInterest roi) {
+        int width = Math.min(getWidth(), roi.w());
+        int height = Math.min(getHeight(), roi.h());
+
         BufferedImage img = GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration()
                 .createCompatibleImage(
-                        roi.w(),
-                        roi.h(),
-                        Transparency.BITMASK
+                        width,
+                        height,
+                        Transparency.TRANSLUCENT
                 );
 
-        Graphics g = img.createGraphics();
+        Graphics2D g = img.createGraphics();
         g.drawImage(
                 image,
                 0, 0,
@@ -45,7 +46,6 @@ public class ImageSprite implements Sprite {
                 roi.x() + roi.w(), roi.y() + roi.h(),
                 null
         );
-        g.dispose();
 
         return new ImageSprite(img);
     }
@@ -58,9 +58,5 @@ public class ImageSprite implements Sprite {
     @Override
     public int getHeight() {
         return image.getHeight(null);
-    }
-
-    private boolean withinBounds(int x, int y) {
-        return x >= 0 && x < getWidth() && y >= 0 && y < getHeight();
     }
 }

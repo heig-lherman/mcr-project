@@ -1,129 +1,49 @@
 package heig.mcr.visitor;
 
-import heig.mcr.visitor.actor.*;
+import heig.mcr.visitor.game.Level;
 import heig.mcr.visitor.game.actor.Player;
-import heig.mcr.visitor.math.DiscreteCoordinates;
+import heig.mcr.visitor.game.map.MapParser;
+import heig.mcr.visitor.math.Direction;
+import heig.mcr.visitor.window.GameFrame;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Map;
 
-public class GameWindow {
+public class GameWindow implements Level.LevelObserver {
 
-    private static final GameWindow INSTANCE = new GameWindow();
+    private final Player player;
+    private final Level level;
+    private final GameFrame frame;
 
-    public static GameWindow getInstance() {
-        return INSTANCE;
+    public GameWindow() throws IOException {
+        this.level = MapParser.parse("/levels/default.txt");
+        this.player = level.getPlayer(0);
+        this.frame = new GameFrame(level, Map.of(
+                KeyEvent.VK_UP, l -> player.setRequestedDirection(Direction.UP),
+                KeyEvent.VK_DOWN, l -> player.setRequestedDirection(Direction.DOWN),
+                KeyEvent.VK_LEFT, l -> player.setRequestedDirection(Direction.LEFT),
+                KeyEvent.VK_RIGHT, l -> player.setRequestedDirection(Direction.RIGHT)
+        ), Map.of(
+                "Start", () -> level.start(),
+                "Stop", () -> level.stop()
+        ));
     }
 
-    private final JFrame frame;
-    private final GraphicsPanel contentPane;
-
-    private final Player player = new Player();
-
-    public GameWindow() {
-        frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        contentPane = new GraphicsPanel();
-        frame.setContentPane(contentPane);
-
-        frame.addKeyListener(new PlayerKeyListener());
-
-        frame.pack();
-        frame.setResizable(false);
+    public void begin() {
+        frame.start();
     }
 
-    public void spawn(Drawable entity) {
-        contentPane.entities.add(entity);
+    @Override
+    public void onLevelWon() {
+        level.stop();
+        JOptionPane.showMessageDialog(frame, "You won!");
     }
 
-    public void despawn(Entity entity) {
-        contentPane.entities.remove(entity);
-    }
-
-    public void implode() {
-        contentPane.entities.clear();
-        contentPane.useBackground = true;
-    }
-
-    public void show() {
-        frame.setVisible(true);
-    }
-
-    public void update() {
-        for (Drawable entity : contentPane.entities) {
-            if (entity instanceof Interactable e && e.getCoordinates().equals(player.getCoordinates())) {
-                player.interactWith(e);
-            }
-        }
-
-        contentPane.repaint();
-    }
-
-    private class GraphicsPanel extends JPanel {
-
-        private final List<Drawable> entities = new LinkedList<>();
-        private final BufferedImage pacmanBg;
-
-        private boolean useBackground = false;
-
-        public GraphicsPanel() {
-            setSize(640, 800);
-            setPreferredSize(getSize());
-            setBackground(Color.WHITE);
-
-            try {
-                pacmanBg = ImageIO.read(getClass().getResource("/pacman.png"));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D graph = (Graphics2D) g;
-            graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            if (useBackground) {
-                graph.drawImage(
-                        pacmanBg.getSubimage(0, 0, pacmanBg.getWidth() / 3, pacmanBg.getHeight()),
-                        0, 0,
-                        getWidth(), getHeight(),
-                        this
-                );
-            }
-
-            for (Drawable entity : entities) {
-                entity.draw(graph);
-            }
-
-            player.draw(graph);
-        }
-    }
-
-    private class PlayerKeyListener extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            player.moveTo(shiftCoordinates(e, player.getCoordinates()));
-            update();
-        }
-
-        public DiscreteCoordinates shiftCoordinates(KeyEvent e, DiscreteCoordinates orig) {
-            return switch (e.getKeyCode()) {
-                case KeyEvent.VK_UP -> orig.up();
-                case KeyEvent.VK_DOWN -> orig.down();
-                case KeyEvent.VK_LEFT -> orig.left();
-                case KeyEvent.VK_RIGHT -> orig.right();
-                default -> orig;
-            };
-        }
+    @Override
+    public void onLevelLost() {
+        level.stop();
+        JOptionPane.showMessageDialog(frame, "You lost!");
     }
 }

@@ -25,11 +25,11 @@ public class ColorSprite implements Sprite {
 
     @Override
     public int getWidth() {
-        return 1;
+        return 16;
     }
 
     @Override
     public int getHeight() {
-        return 1;
+        return 16;
     }
 }

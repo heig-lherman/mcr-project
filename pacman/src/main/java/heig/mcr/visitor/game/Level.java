@@ -1,58 +1,56 @@
 package heig.mcr.visitor.game;
 
-import heig.mcr.visitor.board.Board;
-import heig.mcr.visitor.board.Cell;
-import heig.mcr.visitor.board.Entity;
-import heig.mcr.visitor.board.Interactor;
+import heig.mcr.visitor.board.*;
 import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public final class Level {
+public class Level {
 
     private final Object moveLock = new Object();
     private final Object startLock = new Object();
 
     private final Board board;
 
-    private final Map<Ghost, ExecutorService> ghostThreads = new HashMap<>();
+    private final Map<MovableEntity, ExecutorService> entityThreads = new HashMap<>();
+    private final List<Player> players = new LinkedList<>();
     private final List<LevelObserver> observers = new LinkedList<>();
-    private final List<Player> players;
 
     private boolean running = false;
 
     public Level(Board board, Collection<Ghost> ghosts, List<Player> players) {
         this.board = board;
-        this.players = players;
+        this.players.addAll(players);
+
         for (var ghost : ghosts) {
-            ghostThreads.put(ghost, null);
+            entityThreads.put(ghost, Executors.newSingleThreadScheduledExecutor());
+        }
+
+        for (var player : players) {
+            entityThreads.put(player, Executors.newSingleThreadScheduledExecutor());
         }
     }
 
-    private void addObserver(LevelObserver observer) {
-        observers.add(observer);
+    public Board getBoard() {
+        return board;
     }
 
-    private void removeObserver(LevelObserver observer) {
-        observers.remove(observer);
+    public Player getPlayer(int index) {
+        return players.get(index);
     }
 
     public void move(Entity entity, Direction direction) {
-        if (!running) {
-            return;
-        }
-
         synchronized (moveLock) {
+            if (!running) {
+                return;
+            }
+
             entity.setDirection(direction);
 
             Cell location = entity.getCell();
@@ -74,11 +72,11 @@ public final class Level {
     }
 
     public void start() {
-        if (running) {
-            return;
-        }
-
         synchronized (startLock) {
+            if (running) {
+                return;
+            }
+
             running = true;
             startThreads();
             updateObservers();
@@ -86,34 +84,32 @@ public final class Level {
     }
 
     public void stop() {
-        if (!running) {
-            return;
-        }
-
         synchronized (startLock) {
+            if (!running) {
+                return;
+            }
+
             stopThreads();
             running = false;
         }
     }
 
     private void startThreads() {
-        for (var ghost : ghostThreads.keySet()) {
+        for (var entity : entityThreads.keySet()) {
             var service = Executors.newSingleThreadScheduledExecutor();
             service.scheduleAtFixedRate(
-                    new GhostTask(ghost),
-                    ghost.getMoveInterval() / 2,
-                    ghost.getMoveInterval(),
+                    new EntityTask(entity),
+                    entity.getMoveInterval() / 2,
+                    entity.getMoveInterval(),
                     TimeUnit.MILLISECONDS
             );
 
-            ghostThreads.put(ghost, service);
+            entityThreads.put(entity, service);
         }
     }
 
     private void stopThreads() {
-        for (var service : ghostThreads.values()) {
-            service.shutdownNow();
-        }
+        entityThreads.values().forEach(ExecutorService::shutdownNow);
     }
 
     private void updateObservers() {
@@ -135,19 +131,19 @@ public final class Level {
                 .count();
     }
 
-    private class GhostTask implements Runnable {
+    private class EntityTask implements Runnable {
 
-        private final Ghost ghost;
+        private final MovableEntity entity;
 
-        public GhostTask(Ghost ghost) {
-            this.ghost = ghost;
+        public EntityTask(MovableEntity entity) {
+            this.entity = entity;
         }
 
         @Override
         public void run() {
-            Direction nextMove = ghost.nextMove();
+            Direction nextMove = entity.nextMove();
             if (Objects.nonNull(nextMove)) {
-                move(ghost, nextMove);
+                move(entity, nextMove);
             }
         }
     }

@@ -1,9 +1,9 @@
 package heig.mcr.visitor.math;
 
 public enum Direction {
-    UP(new Vector(0.0f, 1.0f)),
+    UP(new Vector(0.0f, -1.0f)),
     RIGHT(new Vector(1.0f, 0.0f)),
-    DOWN(new Vector(0.0f, -1.0f)),
+    DOWN(new Vector(0.0f, 1.0f)),
     LEFT(new Vector(-1.0f, 0.0f));
 
     // Direction of the Direction
@@ -11,6 +11,22 @@ public enum Direction {
 
     Direction(Vector direction) {
         this.direction = direction;
+    }
+
+    /**
+     * Return the x component of the direction
+     * @return the x component
+     */
+    public int dx() {
+        return (int) direction.x();
+    }
+
+    /**
+     * Return the y component of the direction
+     * @return the y component
+     */
+    public int dy() {
+        return (int) direction.y();
     }
 
     /**
@@ -67,6 +83,14 @@ public enum Direction {
         if (v.y() < 0 && v.x() == 0)
             return Direction.DOWN;
         return null;
+    }
+
+    /**
+     * Return a random orientation
+     * @return a random orientation
+     */
+    public static Direction random() {
+        return Direction.values()[RandomGenerator.getInstance().nextInt(4)];
     }
 
     @Override

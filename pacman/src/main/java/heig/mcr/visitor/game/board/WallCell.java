@@ -13,6 +13,6 @@ public class WallCell extends Cell {
 
     @Override
     public Sprite getSprite() {
-        return PacmanSprites.getInstance().getGround();
+        return PacmanSprites.getInstance().getWall();
     }
 }

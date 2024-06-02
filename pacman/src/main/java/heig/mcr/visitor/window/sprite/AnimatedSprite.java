@@ -18,7 +18,7 @@ public class AnimatedSprite implements Sprite {
 
 
     public AnimatedSprite(Sprite[] frames, int delay, boolean looping) {
-        this(frames, delay, looping, false);
+        this(frames, delay, looping, true);
     }
 
     public AnimatedSprite(Sprite[] frames, int delay, boolean looping, boolean animating) {
@@ -63,9 +63,9 @@ public class AnimatedSprite implements Sprite {
             } else if (currentFrame >= frames.length) {
                 animating = false;
             }
-        }
 
-        lastUpdate = now;
+            lastUpdate = now;
+        }
     }
 
     @Override
