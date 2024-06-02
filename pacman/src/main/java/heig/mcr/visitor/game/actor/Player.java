@@ -42,7 +42,7 @@ public class Player extends MovableEntity implements Interactor {
     }
 
     @Override
-    public Direction nextMove() {
+    public Direction getNextMove() {
         if (getCell().getNeighbor(requestedDirection).isWalkable()) {
             return requestedDirection;
         }
@@ -62,6 +62,11 @@ public class Player extends MovableEntity implements Interactor {
     public void kill() {
         alive = false;
         deathSprites.restart();
+    }
+
+    @Override
+    public int getLayer() {
+        return 100;
     }
 
     @Override

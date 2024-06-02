@@ -8,5 +8,5 @@ import heig.mcr.visitor.math.Direction;
 public abstract class MovableEntity extends Entity {
 
     public abstract int getMoveInterval();
-    public abstract Direction nextMove();
+    public abstract Direction getNextMove();
 }

@@ -15,7 +15,7 @@ public class RandomGhost extends Ghost {
     }
 
     @Override
-    public Direction nextMove() {
+    public Direction getNextMove() {
         return Direction.random();
     }
 

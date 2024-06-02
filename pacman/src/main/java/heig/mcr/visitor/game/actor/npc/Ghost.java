@@ -16,6 +16,11 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     }
 
     @Override
+    public int getLayer() {
+        return 10;
+    }
+
+    @Override
     public Sprite getSprite() {
         return directedSprites.get(getDirection());
     }

@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class LevelPanel extends JPanel {
 
-    private static final int SQUARE_SIZE = 16;
+    public static final int SQUARE_SIZE = 32;
     private final Level level;
 
     public LevelPanel(Level level) {
@@ -45,6 +45,9 @@ public class LevelPanel extends JPanel {
         int cellWidth = getWidth() / board.getWidth();
         int cellHeight = getHeight() / board.getHeight();
 
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+
         for (int y = 0; y < board.getHeight(); y++) {
             int cellY = y * cellHeight;
             for (int x = 0; x < board.getWidth(); x++) {
@@ -58,7 +61,7 @@ public class LevelPanel extends JPanel {
     private void renderCell(Cell cell, Graphics2D g, int x, int y, int width, int height) {
         cell.getSprite().draw(g, x, y, width, height);
         for (Entity occupant : cell.getOccupants()) {
-            occupant.getSprite().draw(g, x - 8, y - 8, width, height);
+            occupant.getSprite().draw(g, x, y, width, height);
         }
     }
 }

@@ -19,6 +19,7 @@ public class GameWindow implements Level.LevelObserver {
 
     public GameWindow() throws IOException {
         this.level = MapParser.parse("/levels/default.txt");
+        this.level.addObserver(this);
         this.player = level.getPlayer(0);
         this.frame = new GameFrame(level, Map.of(
                 KeyEvent.VK_UP, l -> player.setRequestedDirection(Direction.UP),

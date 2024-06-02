@@ -19,7 +19,7 @@ public class ImageSprite implements Sprite {
     @Override
     public void draw(Graphics graphics, int x, int y, int width, int height) {
         var img = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-        graphics.drawImage(img, x + (getWidth() / 2), y + (getHeight() / 2), null);
+        graphics.drawImage(img, x, y, null);
     }
 
     @Override

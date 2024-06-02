@@ -39,5 +39,6 @@ public abstract class Entity implements Interactable {
         }
     }
 
+    public abstract int getLayer();
     public abstract Sprite getSprite();
 }

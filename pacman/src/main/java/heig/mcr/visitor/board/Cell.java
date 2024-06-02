@@ -19,7 +19,9 @@ public abstract class Cell {
     }
 
     public Collection<Entity> getOccupants() {
-        return Set.copyOf(occupants);
+        List<Entity> sortedOccupants = new ArrayList<>(occupants);
+        sortedOccupants.sort(Comparator.comparingInt(Entity::getLayer));
+        return sortedOccupants;
     }
 
     public void addOccupant(Entity entity) {

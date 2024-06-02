@@ -8,6 +8,11 @@ import heig.mcr.visitor.window.sprite.Sprite;
 public class Pellet extends Entity {
 
     @Override
+    public int getLayer() {
+        return 1;
+    }
+
+    @Override
     public Sprite getSprite() {
         return PacmanSprites.getInstance().getPellet();
     }

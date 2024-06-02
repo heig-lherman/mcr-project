@@ -45,6 +45,10 @@ public class Level {
         return players.get(index);
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
     public void move(Entity entity, Direction direction) {
         synchronized (moveLock) {
             if (!running) {
@@ -120,6 +124,14 @@ public class Level {
         }
     }
 
+    public void addObserver(LevelObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(LevelObserver observer) {
+        observers.remove(observer);
+    }
+
     public boolean hasAlivePlayer() {
         return players.stream().anyMatch(Player::isAlive);
     }
@@ -141,7 +153,7 @@ public class Level {
 
         @Override
         public void run() {
-            Direction nextMove = entity.nextMove();
+            Direction nextMove = entity.getNextMove();
             if (Objects.nonNull(nextMove)) {
                 move(entity, nextMove);
             }

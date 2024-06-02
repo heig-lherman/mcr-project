@@ -3,6 +3,7 @@ package heig.mcr.visitor.game.sprite;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.math.RegionOfInterest;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
+import heig.mcr.visitor.window.sprite.DefaultSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 import heig.mcr.visitor.window.sprite.SpriteRegister;
 
@@ -39,7 +40,7 @@ public final class PacmanSprites extends SpriteRegister {
     }
 
     public Sprite getGround() {
-        return new GroundSprite();
+        return new DefaultSprite();
     }
 
     public Sprite getPellet() {
