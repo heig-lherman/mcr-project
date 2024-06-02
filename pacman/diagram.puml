@@ -23,6 +23,11 @@ class GroundCell {
 	+ getSprite(): Sprite
 }
 
+class SuperPellet {
+	+ getSprite(): Sprite
+	+ acceptInteraction(v: InteractionVisitor): void
+}
+
 class Main {
 	+ {static} main(args: String[]): void
 }
@@ -44,12 +49,12 @@ class Level {
 	- moveLock: Object
 	- startLock: Object
 	- board: Board
-	- ghostThreads: Map<Ghost,ExecutorService>
-	- observers: List<LevelObserver>
+	- entityThreads: Map<MovableEntity,ExecutorService>
 	- players: List<Player>
+	- observers: List<LevelObserver>
 	- running: boolean
-	- addObserver(observer: LevelObserver): void
-	- removeObserver(observer: LevelObserver): void
+	+ getBoard(): Board
+	+ getPlayer(index: int): Player
 	+ move(entity: Entity, direction: Direction): void
 	+ start(): void
 	+ stop(): void
@@ -61,8 +66,8 @@ class Level {
 }
 
 
-class Level$GhostTask {
-	- ghost: Ghost
+class Level$EntityTask {
+	- entity: MovableEntity
 	+ run(): void
 }
 
@@ -73,9 +78,11 @@ interface Level$LevelObserver {
 }
 
 abstract class Ghost {
-	+ {abstract}nextMove(): Direction
+	- directedSprites: Map<Direction,? extends Sprite>
+	+ getSprite(): Sprite
 	+ getMoveInterval(): int
 }
+
 
 class DiscreteCoordinates {
 	- x: int
@@ -88,8 +95,8 @@ class DiscreteCoordinates {
 	+ getNeighbours(): List<DiscreteCoordinates>
 	+ equals(o: Object): boolean
 	+ hashCode(): int
-	+ y(): int
 	+ x(): int
+	+ y(): int
 }
 
 
@@ -103,17 +110,28 @@ enum Direction {
 	+ DOWN: 
 	+ LEFT: 
 	- direction: Vector
+	+ dx(): int
+	+ dy(): int
 	+ opposite(): Direction
 	+ toVector(): Vector
 	+ {static} fromInt(index: int): Direction
 	+ {static} fromVector(v: Vector): Direction
+	+ {static} random(): Direction
 	+ toString(): String
+}
+
+
+class RandomGenerator {
+	- {static} instance: Random
+	+ {static} getInstance(): Random
 }
 
 
 interface InteractionVisitor {
 	~ interactWith(player: Player): void
-	~ interactWith(player: Pellet): void
+	~ interactWith(pellet: Pellet): void
+	~ interactWith(pellet: SuperPellet): void
+	~ interactWith(ghost: RandomGhost): void
 }
 
 interface Interactable {
@@ -194,10 +212,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ y(): int
 	+ w(): int
 	+ x(): int
 	+ h(): int
+	+ y(): int
 }
 
 
@@ -212,9 +230,35 @@ class WallSprite {
 }
 
 
+class MapParser {
+	+ {static} parse(resourcePath: String): Level
+	+ {static} parse(inputStream: InputStream): Level
+	+ {static} parse(map: char[][]): Level
+}
+
+class GameFrame {
+	- {static} FRAME_RATE: int
+	- panel: LevelPanel
+	+ start(): void
+}
+
+
+class GameFrame$KeyListener {
+	- keybindings: Map<Integer,Consumer<Level>>
+	+ keyPressed(e: KeyEvent): void
+}
+
+
+abstract class MovableEntity {
+	+ {abstract}getMoveInterval(): int
+	+ {abstract}nextMove(): Direction
+}
+
 abstract class AbstractInteractionVisitor {
 	+ interactWith(player: Player): void
-	+ interactWith(player: Pellet): void
+	+ interactWith(pellet: Pellet): void
+	+ interactWith(superPellet: SuperPellet): void
+	+ interactWith(ghost: RandomGhost): void
 }
 
 abstract class SpriteRegister {
@@ -225,12 +269,18 @@ abstract class SpriteRegister {
 }
 
 
+class ButtonPanel {
+}
 class Player {
 	- normalHandler: InteractionVisitor
 	- directedSprites: Map<Direction,AnimatedSprite>
 	- deathSprites: AnimatedSprite
+	- requestedDirection: Direction
 	- alive: boolean
 	+ isAlive(): boolean
+	+ setRequestedDirection(requestedDirection: Direction): void
+	+ getMoveInterval(): int
+	+ nextMove(): Direction
 	+ getSprite(): Sprite
 	+ kill(): void
 	+ acceptInteraction(v: InteractionVisitor): void
@@ -239,14 +289,16 @@ class Player {
 
 
 class Player$NormalInteractionHandler {
+	+ interactWith(pellet: Pellet): void
+	+ interactWith(superPellet: SuperPellet): void
 }
+
 class ImageSprite {
 	- image: Image
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
 	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
-	- withinBounds(x: int, y: int): boolean
 }
 
 
@@ -257,34 +309,34 @@ class Board {
 	+ getHeight(): int
 	+ getCell(x: int, y: int): Cell
 	+ withinBounds(x: int, y: int): boolean
+	+ {static} create(cells: Cell[][]): Board
+}
+
+
+class LevelPanel {
+	- {static} SQUARE_SIZE: int
+	- level: Level
+	+ getLevel(): Level
+	# paintComponent(g: Graphics): void
+	- render(board: Board, g: Graphics2D): void
+	- renderCell(cell: Cell, g: Graphics2D, x: int, y: int, width: int, height: int): void
 }
 
 
 class GameWindow {
-	- {static} INSTANCE: GameWindow
-	- frame: JFrame
-	- contentPane: GraphicsPanel
 	- player: Player
-	+ {static} getInstance(): GameWindow
-	+ spawn(entity: Drawable): void
-	+ despawn(entity: Entity): void
-	+ implode(): void
-	+ show(): void
-	+ update(): void
+	- level: Level
+	- frame: GameFrame
+	+ begin(): void
+	+ onLevelWon(): void
+	+ onLevelLost(): void
 }
 
 
-class GameWindow$GraphicsPanel {
-	- entities: List<Drawable>
-	- pacmanBg: BufferedImage
-	- useBackground: boolean
-	# paintComponent(g: Graphics): void
-}
-
-
-class GameWindow$PlayerKeyListener {
-	+ keyPressed(e: KeyEvent): void
-	+ shiftCoordinates(e: KeyEvent, orig: DiscreteCoordinates): DiscreteCoordinates
+class RandomGhost {
+	+ nextMove(): Direction
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
 }
 
 interface Sprite {
@@ -316,8 +368,25 @@ class PacmanSprites {
 	+ getWall(): Sprite
 	+ getGround(): Sprite
 	+ getPellet(): Sprite
+	+ getSuperPellet(): Sprite
+	+ getRedGhost(): Map<Direction,AnimatedSprite>
 	- loadDirectedSprites(resource: String, frames: int): Map<Direction,AnimatedSprite>
 	+ {static} getInstance(): PacmanSprites
+}
+
+
+class LevelBuilder {
+	- cells: Cell[][]
+	- ghosts: List<Ghost>
+	- players: List<Player>
+	+ {static} start(width: int, height: int): LevelBuilder
+	+ addWall(x: int, y: int): LevelBuilder
+	+ addGround(x: int, y: int): LevelBuilder
+	+ addPellet(x: int, y: int): LevelBuilder
+	+ addSuperPellet(x: int, y: int): LevelBuilder
+	+ addGhost(x: int, y: int, ghost: Ghost): LevelBuilder
+	+ addPlayer(x: int, y: int): LevelBuilder
+	+ build(): Level
 }
 
 
@@ -344,27 +413,32 @@ class AnimatedSprite {
 
 
 Cell <|-- GroundCell
-Level +-- Level$GhostTask
-Runnable <|.. Level$GhostTask
+Pellet <|-- SuperPellet
+Level +-- Level$EntityTask
+Runnable <|.. Level$EntityTask
 Level +-- Level$LevelObserver
 Interactor <|.. Ghost
-Entity <|-- Ghost
+MovableEntity <|-- Ghost
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
 ColorSprite <|-- GroundSprite
 Sprite <|.. ColorSprite
 Entity <|-- Pellet
 ColorSprite <|-- WallSprite
+JFrame <|-- GameFrame
+GameFrame +-- GameFrame$KeyListener
+KeyAdapter <|-- GameFrame$KeyListener
+Entity <|-- MovableEntity
 InteractionVisitor <|.. AbstractInteractionVisitor
+JPanel <|-- ButtonPanel
 Interactor <|.. Player
-Entity <|-- Player
+MovableEntity <|-- Player
 Player +-- Player$NormalInteractionHandler
 AbstractInteractionVisitor <|-- Player$NormalInteractionHandler
 Sprite <|.. ImageSprite
-GameWindow +-- GameWindow$GraphicsPanel
-JPanel <|-- GameWindow$GraphicsPanel
-GameWindow +-- GameWindow$PlayerKeyListener
-KeyAdapter <|-- GameWindow$PlayerKeyListener
+JPanel <|-- LevelPanel
+LevelObserver <|.. GameWindow
+Ghost <|-- RandomGhost
 Interactable <|.. Entity
 SpriteRegister <|-- PacmanSprites
 Sprite <|.. AnimatedSprite
