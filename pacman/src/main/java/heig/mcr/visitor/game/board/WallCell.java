@@ -1,7 +1,7 @@
 package heig.mcr.visitor.game.board;
 
 import heig.mcr.visitor.board.Cell;
-import heig.mcr.visitor.game.sprite.PacmanSprites;
+import heig.mcr.visitor.window.sprite.DefaultSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 
 public class WallCell extends Cell {
@@ -13,6 +13,6 @@ public class WallCell extends Cell {
 
     @Override
     public Sprite getSprite() {
-        return PacmanSprites.getInstance().getWall();
+        return new DefaultSprite();
     }
 }

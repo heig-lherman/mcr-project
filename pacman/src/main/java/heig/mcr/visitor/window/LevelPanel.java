@@ -4,6 +4,7 @@ import heig.mcr.visitor.board.Board;
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
 import heig.mcr.visitor.game.Level;
+import heig.mcr.visitor.game.sprite.PacmanSprites;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,8 +46,13 @@ public class LevelPanel extends JPanel {
         int cellWidth = getWidth() / board.getWidth();
         int cellHeight = getHeight() / board.getHeight();
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        PacmanSprites.getInstance().getBackground().draw(
+                g,
+                0,
+                0,
+                getWidth(),
+                getHeight()
+        );
 
         for (int y = 0; y < board.getHeight(); y++) {
             int cellY = y * cellHeight;
