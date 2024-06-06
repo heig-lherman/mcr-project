@@ -12,6 +12,9 @@ import heig.mcr.visitor.window.sprite.Sprite;
 import java.util.Map;
 
 public abstract class Ghost extends MovableEntity implements Interactor {
+    private int edibleDuration;
+    private long edibleEndTime;
+
     private GhostState state;
     private Map<Direction, ? extends Sprite> directedSprites;
 
@@ -60,8 +63,14 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     private void changeSprite() {
         if (isEdible()){
             directedSprites = getEdibleSprites();
-        }else {
+            for (Direction direction : directedSprites.keySet()) {
+                directedSprites.get(direction).startBlinking();
+            }
+        } else {
             directedSprites = getInvincibleSprites();
+            for (Direction direction : directedSprites.keySet()) {
+                directedSprites.get(direction).stopBlinking();
+            }
         }
     }
 }

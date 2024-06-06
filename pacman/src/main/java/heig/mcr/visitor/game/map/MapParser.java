@@ -1,10 +1,7 @@
 package heig.mcr.visitor.game.map;
 
 import heig.mcr.visitor.game.Level;
-import heig.mcr.visitor.game.actor.npc.Luke;
-import heig.mcr.visitor.game.actor.npc.RandomGhost;
-import heig.mcr.visitor.game.actor.npc.Sith;
-import heig.mcr.visitor.game.actor.npc.Vader;
+import heig.mcr.visitor.game.actor.npc.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,6 +51,12 @@ public final class MapParser {
                         break;
                     case 'L':
                         builder.addGhost(x, y, new Luke());
+                        break;
+                    case 'T':
+                        builder.addGhost(x, y, new StormTrooper());
+                        break;
+                    case 'B':
+                        builder.addGhost(x, y, new BobaFett());
                         break;
                     case '|':
                         builder.addWall(x, y);

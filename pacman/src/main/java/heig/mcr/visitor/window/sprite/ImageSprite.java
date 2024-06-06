@@ -59,4 +59,14 @@ public class ImageSprite implements Sprite {
     public int getHeight() {
         return image.getHeight(null);
     }
+
+    @Override
+    public void startBlinking() {
+
+    }
+
+    @Override
+    public void stopBlinking() {
+
+    }
 }

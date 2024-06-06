@@ -41,4 +41,7 @@ public interface Sprite {
      * @return the height of the sprite
      */
     int getHeight();
+
+     void startBlinking();
+     void stopBlinking();
 }

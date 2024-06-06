@@ -70,6 +70,22 @@ public final class PacmanSprites extends SpriteRegister {
         return loadDirectedSprites("/sprites/vader_weak.png", 3, 29, 23);
     }
 
+    public Map<Direction, AnimatedSprite> getStormTrooper() {
+        return loadDirectedSprites("/sprites/stormtrooper.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getEdibleStormTrooper() {
+        return loadDirectedSprites("/sprites/stormtrooper_weak.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getBobaFett() {
+        return loadDirectedSprites("/sprites/bobafett.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getEdibleBobaFett() {
+        return loadDirectedSprites("/sprites/bobafett_weak.png", 3, 29, 23);
+    }
+
 
 
     private Map<Direction, AnimatedSprite> loadDirectedSprites(String resource, int frames, int spriteWidth, int spriteHeight) {

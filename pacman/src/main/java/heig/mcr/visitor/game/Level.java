@@ -27,6 +27,10 @@ public class Level {
 
     private boolean running = false;
 
+    private int edibleDuration = 10000;
+    private long edibleEndTime;
+
+
     public Level(Board board, Collection<Ghost> ghosts, List<Player> players) {
         this.board = board;
         this.players.addAll(players);
@@ -132,9 +136,17 @@ public class Level {
             for (var ghost : entityThreads.keySet()) {
                 if (ghost instanceof Ghost g) {
                     g.becomeEdible();
+                    edibleEndTime = System.currentTimeMillis() + edibleDuration;
                 }
             }
             players.forEach(Player::becomeSuper);
+        }
+        if (edibleEndTime != 0 && System.currentTimeMillis() > edibleEndTime) {
+            for (var ghost : entityThreads.keySet()) {
+                if (ghost instanceof Ghost g) {
+                    g.becomeInvincible();
+                }
+            }
         }
     }
 
