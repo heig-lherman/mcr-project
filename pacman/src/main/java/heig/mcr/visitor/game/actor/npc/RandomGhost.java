@@ -4,6 +4,9 @@ import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
+import heig.mcr.visitor.window.sprite.AnimatedSprite;
+
+import java.util.Map;
 
 /**
  * A ghost that moves randomly.
@@ -11,7 +14,17 @@ import heig.mcr.visitor.math.Direction;
 public class RandomGhost extends Ghost {
 
     public RandomGhost() {
-        super(PacmanSprites.getInstance().getRedGhost());
+        super();
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getEdibleSprites() {
+        return null;
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getInvincibleSprites() {
+        return PacmanSprites.getInstance().getRedGhost();
     }
 
     @Override

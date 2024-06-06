@@ -23,7 +23,7 @@ public final class Pathfinding {
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            Cell current = queue.removeFirst();
+            Cell current = queue.remove(0);
 
             Entity entity = current.getOccupants().stream()
                     .filter(entityClass::isInstance)
@@ -62,7 +62,7 @@ public final class Pathfinding {
         queue.add(new Node(null, start, null));
 
         while (!queue.isEmpty()) {
-            Node current = queue.removeFirst();
+            Node current = queue.remove(0);
             Cell cell = current.cell;
 
             if (cell.equals(target)) {

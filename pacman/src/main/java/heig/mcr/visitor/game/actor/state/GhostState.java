@@ -1,4 +1,4 @@
-package heig.mcr.visitor.game.actor;
+package heig.mcr.visitor.game.actor.state;
 
 import heig.mcr.visitor.game.actor.npc.Ghost;
 
@@ -9,9 +9,8 @@ public abstract class GhostState {
         this.ghost = ghost;
     }
 
-    public abstract boolean isMangeable();
+    public abstract boolean isEdible();
 
-    public abstract void becomeMangeable();
+    public abstract void becomeEdible();
     public abstract void becomeInvincible();
-    public abstract void die();
 }

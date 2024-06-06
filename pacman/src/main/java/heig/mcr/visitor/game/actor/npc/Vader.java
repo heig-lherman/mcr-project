@@ -1,16 +1,18 @@
 package heig.mcr.visitor.game.actor.npc;
 
 import heig.mcr.visitor.board.Interactable;
+import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
+import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 
 import java.util.Map;
 
 public class Vader extends Ghost {
 
-    protected Vader(Map<Direction, ? extends Sprite> directedSprites) {
-        super(directedSprites);
+    public Vader() {
+        super();
     }
 
     @Override
@@ -25,6 +27,16 @@ public class Vader extends Ghost {
 
     @Override
     public Direction getNextMove() {
-        return null;
+        return Direction.random();
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getEdibleSprites() {
+        return PacmanSprites.getInstance().getEdibleVader();
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getInvincibleSprites() {
+        return PacmanSprites.getInstance().getVader();
     }
 }

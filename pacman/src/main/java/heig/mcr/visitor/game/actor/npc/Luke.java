@@ -1,15 +1,18 @@
 package heig.mcr.visitor.game.actor.npc;
 
 import heig.mcr.visitor.board.Interactable;
+import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
+import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 
 import java.util.Map;
 
 public class Luke extends Ghost {
-    protected Luke(Map<Direction, ? extends Sprite> directedSprites) {
-        super(directedSprites);
+
+    public Luke() {
+        super();
     }
 
     @Override
@@ -24,6 +27,20 @@ public class Luke extends Ghost {
 
     @Override
     public Direction getNextMove() {
+        return Direction.random();
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getEdibleSprites() {
         return null;
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getInvincibleSprites() {
+        return PacmanSprites.getInstance().getLuke();
+    }
+
+    @Override
+    public void becomeEdible() {
     }
 }

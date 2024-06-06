@@ -3,6 +3,7 @@ package heig.mcr.visitor.game;
 import heig.mcr.visitor.board.*;
 import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
+import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
 
@@ -22,6 +23,8 @@ public class Level {
     private final List<Player> players = new LinkedList<>();
     private final List<LevelObserver> observers = new LinkedList<>();
 
+    private long superPelletCount;
+
     private boolean running = false;
 
     public Level(Board board, Collection<Ghost> ghosts, List<Player> players) {
@@ -35,6 +38,8 @@ public class Level {
         for (var player : players) {
             entityThreads.put(player, Executors.newSingleThreadScheduledExecutor());
         }
+        superPelletCount = countRemainingSuperPellets();
+
     }
 
     public Board getBoard() {
@@ -122,6 +127,15 @@ public class Level {
         } else if (countRemainingPellets() == 0) {
             observers.forEach(LevelObserver::onLevelWon);
         }
+        if (countRemainingSuperPellets() < superPelletCount) {
+            superPelletCount = countRemainingSuperPellets();
+            for (var ghost : entityThreads.keySet()) {
+                if (ghost instanceof Ghost g) {
+                    g.becomeEdible();
+                }
+            }
+            players.forEach(Player::becomeSuper);
+        }
     }
 
     public void addObserver(LevelObserver observer) {
@@ -140,6 +154,13 @@ public class Level {
         return board.streamCells()
                 .flatMap(cell -> cell.getOccupants().stream())
                 .filter(Pellet.class::isInstance)
+                .count();
+    }
+
+    public long countRemainingSuperPellets() {
+        return board.streamCells()
+                .flatMap(cell -> cell.getOccupants().stream())
+                .filter(SuperPellet.class::isInstance)
                 .count();
     }
 

@@ -26,7 +26,7 @@ public final class PacmanSprites extends SpriteRegister {
     }
 
     public Map<Direction, AnimatedSprite> getPacman() {
-        return loadDirectedSprites("/sprites/pacman.png", 4);
+        return loadDirectedSprites("/sprites/pacman.png", 4, 16, 16);
     }
 
     public AnimatedSprite getPacmanDeath() {
@@ -47,17 +47,40 @@ public final class PacmanSprites extends SpriteRegister {
     }
 
     public Map<Direction, AnimatedSprite> getRedGhost() {
-        return loadDirectedSprites("/sprites/ghost-red.png", 2);
+        return loadDirectedSprites("/sprites/ghost-red.png", 2, 16,16);
     }
 
-    private Map<Direction, AnimatedSprite> loadDirectedSprites(String resource, int frames) {
+    public Map<Direction, AnimatedSprite> getSith() {
+        return loadDirectedSprites("/sprites/sith.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getEdibleSith() {
+        return loadDirectedSprites("/sprites/sith_weak.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getLuke() {
+        return loadDirectedSprites("/sprites/luke.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getVader() {
+        return loadDirectedSprites("/sprites/vader.png", 3, 29, 23);
+    }
+
+    public Map<Direction, AnimatedSprite> getEdibleVader() {
+        return loadDirectedSprites("/sprites/vader_weak.png", 3, 29, 23);
+    }
+
+
+
+    private Map<Direction, AnimatedSprite> loadDirectedSprites(String resource, int frames, int spriteWidth, int spriteHeight) {
         Map<Direction, AnimatedSprite> sprites = new EnumMap<>(Direction.class);
         Sprite base = loadSprite(resource);
 
         for (int i = 0; i < DIRECTED_ORDER.length; i++) {
             Sprite directionSprite = base.slice(new RegionOfInterest(
-                    0, i * SPRITE_SIZE,
-                    frames * SPRITE_SIZE, SPRITE_SIZE
+                    0, i * spriteHeight,
+                    frames * spriteWidth,
+                    spriteHeight
             ));
 
             AnimatedSprite animation = createAnimation(
@@ -66,7 +89,6 @@ public final class PacmanSprites extends SpriteRegister {
                     ANIMATION_DELAY,
                     true
             );
-
             animation.start();
             sprites.put(DIRECTED_ORDER[i], animation);
         }

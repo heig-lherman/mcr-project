@@ -3,6 +3,7 @@ package heig.mcr.visitor.game.actor;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.board.Interactor;
 import heig.mcr.visitor.board.MovableEntity;
+import heig.mcr.visitor.game.actor.npc.RandomGhost;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
@@ -15,12 +16,15 @@ import java.util.Map;
 public class Player extends MovableEntity implements Interactor {
 
     private final InteractionVisitor normalHandler = new NormalInteractionHandler();
+    private final InteractionVisitor superHandler = new SuperInteractionHandler();
 
     private final Map<Direction, AnimatedSprite> directedSprites;
     private final AnimatedSprite deathSprites;
 
     private Direction requestedDirection = Direction.UP;
     private boolean alive = true;
+
+    private boolean superMode = false;
 
     public Player() {
         var sprites = PacmanSprites.getInstance();
@@ -30,6 +34,10 @@ public class Player extends MovableEntity implements Interactor {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    public void becomeSuper() {
+        superMode = true;
     }
 
     public void setRequestedDirection(Direction requestedDirection) {
@@ -76,9 +84,13 @@ public class Player extends MovableEntity implements Interactor {
 
     @Override
     public void interactWith(Interactable other) {
-        // TODO depending on state should change visitor
-        other.acceptInteraction(normalHandler);
+        if (superMode) {
+            other.acceptInteraction(superHandler);
+        } else {
+            other.acceptInteraction(normalHandler);
+        }
     }
+
 
     private class NormalInteractionHandler extends AbstractInteractionVisitor {
 
@@ -86,6 +98,32 @@ public class Player extends MovableEntity implements Interactor {
         public void interactWith(Pellet pellet) {
             pellet.leaveCell();
             // TODO could add points here
+        }
+
+        @Override
+        public void interactWith(SuperPellet superPellet) {
+            System.out.println("Super pellet eaten");
+            super.interactWith(superPellet);
+        }
+
+        @Override
+        public void interactWith(RandomGhost ghost) {
+            // Should die
+        }
+    }
+
+    private class SuperInteractionHandler extends AbstractInteractionVisitor {
+
+        @Override
+        public void interactWith(Pellet pellet) {
+            pellet.leaveCell();
+            // TODO could add points here
+        }
+
+
+        @Override
+        public void interactWith(RandomGhost ghost) {
+            //Kill ghost
         }
 
         @Override

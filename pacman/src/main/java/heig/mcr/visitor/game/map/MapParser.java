@@ -1,7 +1,10 @@
 package heig.mcr.visitor.game.map;
 
 import heig.mcr.visitor.game.Level;
+import heig.mcr.visitor.game.actor.npc.Luke;
 import heig.mcr.visitor.game.actor.npc.RandomGhost;
+import heig.mcr.visitor.game.actor.npc.Sith;
+import heig.mcr.visitor.game.actor.npc.Vader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,9 +46,14 @@ public final class MapParser {
                     case 'P':
                         builder.addPlayer(x, y);
                         break;
-                    case 'G':
-                        // TODO: add more ghost spawn types
-                        builder.addGhost(x, y, new RandomGhost());
+                    case 'V':
+                        builder.addGhost(x, y, new Vader());
+                        break;
+                    case 'S':
+                        builder.addGhost(x, y, new Sith());
+                        break;
+                    case 'L':
+                        builder.addGhost(x, y, new Luke());
                         break;
                     case '|':
                         builder.addWall(x, y);
