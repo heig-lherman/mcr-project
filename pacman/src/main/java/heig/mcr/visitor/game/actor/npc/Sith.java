@@ -16,7 +16,7 @@ public class Sith extends Ghost {
 
     @Override
     public void acceptInteraction(InteractionVisitor v) {
-
+        v.interactWith(this);
     }
 
     @Override

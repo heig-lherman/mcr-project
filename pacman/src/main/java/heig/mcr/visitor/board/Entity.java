@@ -7,6 +7,7 @@ import heig.mcr.visitor.window.sprite.Sprite;
  * An entity is placed on the board.
  */
 public abstract class Entity implements Interactable {
+    private Cell initialCell;
 
     private Cell cell;
     private Direction direction = Direction.UP;
@@ -24,6 +25,9 @@ public abstract class Entity implements Interactable {
     }
 
     public void setCell(Cell cell) {
+        if (initialCell == null) {
+            initialCell = cell;
+        }
         if (this.cell != null) {
             this.cell.removeOccupant(this);
         }
@@ -37,6 +41,10 @@ public abstract class Entity implements Interactable {
             cell.removeOccupant(this);
             cell = null;
         }
+    }
+
+    public Cell getInitialCell() {
+        return initialCell;
     }
 
     public abstract int getLayer();

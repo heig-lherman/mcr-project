@@ -3,7 +3,7 @@ package heig.mcr.visitor.game.actor;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.board.Interactor;
 import heig.mcr.visitor.board.MovableEntity;
-import heig.mcr.visitor.game.actor.npc.RandomGhost;
+import heig.mcr.visitor.game.actor.npc.*;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
@@ -108,7 +108,31 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(RandomGhost ghost) {
-            // Should die
+            System.out.println("Ghost eaten");
+        }
+
+        @Override
+        public void interactWith(Vader vader) {
+        }
+
+        @Override
+        public void interactWith(Luke luke) {
+
+        }
+
+        @Override
+        public void interactWith(Sith sith) {
+
+        }
+
+        @Override
+        public void interactWith(StormTrooper stormTrooper) {
+
+        }
+
+        @Override
+        public void interactWith(BobaFett bobaFett) {
+
         }
     }
 
@@ -123,7 +147,33 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(RandomGhost ghost) {
-            //Kill ghost
+            System.out.println("Ghost eaten Super");
+            ghost.setCell(ghost.getInitialCell());
+        }
+
+        @Override
+        public void interactWith(Vader vader) {
+            vader.setCell(vader.getInitialCell());
+        }
+
+        @Override
+        public void interactWith(Luke luke) {
+            luke.setCell(luke.getInitialCell());
+        }
+
+        @Override
+        public void interactWith(Sith sith) {
+            sith.setCell(sith.getInitialCell());
+        }
+
+        @Override
+        public void interactWith(StormTrooper stormTrooper) {
+            stormTrooper.setCell(stormTrooper.getInitialCell());
+        }
+
+        @Override
+        public void interactWith(BobaFett bobaFett) {
+            bobaFett.setCell(bobaFett.getInitialCell());
         }
 
         @Override

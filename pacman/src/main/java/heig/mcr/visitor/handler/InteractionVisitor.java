@@ -3,7 +3,7 @@ package heig.mcr.visitor.handler;
 import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.SuperPellet;
-import heig.mcr.visitor.game.actor.npc.RandomGhost;
+import heig.mcr.visitor.game.actor.npc.*;
 
 public interface InteractionVisitor {
 
@@ -15,4 +15,15 @@ public interface InteractionVisitor {
 
     // Ghosts
     void interactWith(RandomGhost ghost);
+
+    void interactWith(Vader vader);
+
+    void interactWith(Luke luke);
+
+    void interactWith(Sith sith);
+
+    void interactWith(StormTrooper stormTrooper);
+
+    void interactWith(BobaFett bobaFett);
+
 }

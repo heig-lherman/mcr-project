@@ -16,7 +16,7 @@ public class StormTrooper extends Ghost{
 
     @Override
     public void acceptInteraction(InteractionVisitor v) {
-
+        v.interactWith(this);
     }
 
     @Override

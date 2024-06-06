@@ -16,7 +16,7 @@ public class BobaFett extends Ghost {
 
     @Override
     public void acceptInteraction(InteractionVisitor v) {
-
+        v.interactWith(this);
     }
 
     @Override
