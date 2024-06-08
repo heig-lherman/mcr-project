@@ -118,11 +118,6 @@ public class Player extends MovableEntity implements Interactor {
         }
 
         @Override
-        public void interactWith(RandomGhost ghost) {
-            handleGhostInteraction(ghost);
-        }
-
-        @Override
         public void interactWith(Vader vader) {
             handleGhostInteraction(vader);
         }
@@ -159,12 +154,6 @@ public class Player extends MovableEntity implements Interactor {
         public void interactWith(Pellet pellet) {
             pellet.leaveCell();
             // TODO could add points here
-        }
-
-
-        @Override
-        public void interactWith(RandomGhost ghost) {
-            handleBaseSuperInteraction(ghost);
         }
 
         @Override

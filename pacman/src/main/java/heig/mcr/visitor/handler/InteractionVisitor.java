@@ -14,8 +14,6 @@ public interface InteractionVisitor {
     void interactWith(SuperPellet pellet);
 
     // Ghosts
-    void interactWith(RandomGhost ghost);
-
     void interactWith(Vader vader);
 
     void interactWith(Luke luke);

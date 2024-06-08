@@ -155,7 +155,6 @@ interface InteractionVisitor {
 	~ interactWith(player: Player): void
 	~ interactWith(pellet: Pellet): void
 	~ interactWith(pellet: SuperPellet): void
-	~ interactWith(ghost: RandomGhost): void
 	~ interactWith(vader: Vader): void
 	~ interactWith(luke: Luke): void
 	~ interactWith(sith: Sith): void
@@ -341,7 +340,6 @@ abstract class AbstractInteractionVisitor {
 	+ interactWith(player: Player): void
 	+ interactWith(pellet: Pellet): void
 	+ interactWith(superPellet: SuperPellet): void
-	+ interactWith(ghost: RandomGhost): void
 }
 
 class Luke {
@@ -388,7 +386,6 @@ class Player {
 class Player$NormalInteractionHandler {
 	+ interactWith(pellet: Pellet): void
 	+ interactWith(superPellet: SuperPellet): void
-	+ interactWith(ghost: RandomGhost): void
 	+ interactWith(vader: Vader): void
 	+ interactWith(luke: Luke): void
 	+ interactWith(sith: Sith): void
@@ -399,7 +396,6 @@ class Player$NormalInteractionHandler {
 
 class Player$SuperInteractionHandler {
 	+ interactWith(pellet: Pellet): void
-	+ interactWith(ghost: RandomGhost): void
 	+ interactWith(vader: Vader): void
 	+ interactWith(luke: Luke): void
 	+ interactWith(sith: Sith): void
@@ -448,15 +444,6 @@ class GameWindow {
 	+ begin(): void
 	+ onLevelWon(): void
 	+ onLevelLost(): void
-}
-
-
-class RandomGhost {
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ getNextMove(): Direction
-	+ acceptInteraction(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
 }
 
 class Vader {
@@ -595,7 +582,6 @@ AbstractInteractionVisitor <|-- Player$SuperInteractionHandler
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
-Ghost <|-- RandomGhost
 Ghost <|-- Vader
 Interactable <|.. Entity
 SpriteRegister <|-- PacmanSprites
