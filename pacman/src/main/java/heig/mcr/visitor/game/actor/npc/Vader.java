@@ -5,8 +5,6 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
-import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.util.Map;
 
 public class Vader extends Ghost {
@@ -14,6 +12,7 @@ public class Vader extends Ghost {
     public Vader() {
         super();
         this.name = "Vader";
+        this.pathUpdateInterval = 6;
     }
 
     @Override
