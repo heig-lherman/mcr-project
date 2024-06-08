@@ -2,7 +2,6 @@ package heig.mcr.visitor.math;
 
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
-
 import java.util.*;
 
 public final class Pathfinding {
@@ -54,7 +53,6 @@ public final class Pathfinding {
      * @return The list of directions to follow to reach the target cell, or an empty list if no path was found
      */
     public static List<Direction> findShortestPath(Cell start, Cell target) {
-        long startTime = System.currentTimeMillis();
         if (start.equals(target)) {
             return Collections.emptyList();
         }
@@ -70,8 +68,6 @@ public final class Pathfinding {
             Cell cell = current.cell;
 
             if (cell.equals(target)) {
-                long endTime = System.currentTimeMillis();
-                System.out.println("Pathfinding execution time: " + (endTime - startTime) + "ms");
                 return current.getPath();
             }
 
@@ -84,8 +80,6 @@ public final class Pathfinding {
             }
         }
 
-        long endTime = System.currentTimeMillis();
-        System.out.println("Pathfinding execution time: " + (endTime - startTime) + "ms with no path found");
         return Collections.emptyList();
     }
 
