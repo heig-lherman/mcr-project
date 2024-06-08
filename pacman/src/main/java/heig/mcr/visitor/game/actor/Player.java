@@ -29,6 +29,7 @@ public class Player extends MovableEntity implements Interactor {
         var sprites = PacmanSprites.getInstance();
         directedSprites = sprites.getPacman();
         deathSprites = sprites.getPacmanDeath();
+        this.name = "Player";
     }
 
     public boolean isAlive() {

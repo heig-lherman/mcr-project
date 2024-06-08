@@ -71,4 +71,9 @@ public abstract class Ghost extends MovableEntity implements Interactor {
             }
         }
     }
+
+    @Override
+    public Direction getNextMove() {
+        return Direction.random();
+    }
 }

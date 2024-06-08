@@ -21,14 +21,7 @@ public class Sith extends Ghost {
     }
 
     @Override
-    public void interactWith(Interactable other) {
-
-    }
-
-    @Override
-    public Direction getNextMove() {
-        return Direction.random();
-    }
+    public void interactWith(Interactable other) { }
 
     @Override
     Map<Direction, AnimatedSprite> getEdibleSprites() {

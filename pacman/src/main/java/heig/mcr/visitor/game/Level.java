@@ -107,6 +107,7 @@ public class Level {
 
     private void startThreads() {
         for (var entity : entityThreads.keySet()) {
+            System.out.println("Starting thread for entity: " + entity);
             var service = Executors.newSingleThreadScheduledExecutor();
             service.scheduleAtFixedRate(
                     new EntityTask(entity),
@@ -187,6 +188,8 @@ public class Level {
             Direction nextMove = entity.getNextMove();
             if (Objects.nonNull(nextMove)) {
                 move(entity, nextMove);
+            } else {
+                System.out.println("nextMove is null!");
             }
         }
     }
