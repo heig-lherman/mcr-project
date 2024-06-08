@@ -29,6 +29,10 @@ public final class PacmanSprites extends SpriteRegister {
         return loadDirectedSprites("/sprites/pacman.png", 4, 16, 16);
     }
 
+    public Map<Direction, AnimatedSprite> getRedPacman() {
+        return loadDirectedSprites("/sprites/pacman-red.png", 4, 16, 16);
+    }
+
     public AnimatedSprite getPacmanDeath() {
         Sprite base = loadSprite("/sprites/pacman-death.png");
         return createAnimation(base, 11, ANIMATION_DELAY, false);

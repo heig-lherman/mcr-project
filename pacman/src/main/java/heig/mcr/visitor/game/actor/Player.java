@@ -17,7 +17,7 @@ public class Player extends MovableEntity implements Interactor {
     private final InteractionVisitor normalHandler = new NormalInteractionHandler();
     private final InteractionVisitor superHandler = new SuperInteractionHandler();
 
-    private final Map<Direction, AnimatedSprite> directedSprites;
+    private Map<Direction, AnimatedSprite> directedSprites;
     private final AnimatedSprite deathSprites;
 
     private Direction requestedDirection = Direction.UP;
@@ -75,6 +75,11 @@ public class Player extends MovableEntity implements Interactor {
     public void kill() {
         alive = false;
         deathSprites.restart();
+    }
+
+    public void changeToRed() {
+        System.out.println("Pacman changes to red");
+        directedSprites = PacmanSprites.getInstance().getRedPacman();
     }
 
     @Override
@@ -164,6 +169,7 @@ public class Player extends MovableEntity implements Interactor {
         @Override
         public void interactWith(Vader vader) {
             handleBaseSuperInteraction(vader);
+            changeToRed();
         }
 
         @Override
