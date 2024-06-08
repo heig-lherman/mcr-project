@@ -13,6 +13,7 @@ public class Vader extends Ghost {
 
     public Vader() {
         super();
+        this.name = "Vader";
     }
 
     @Override

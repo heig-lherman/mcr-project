@@ -6,7 +6,6 @@ import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
-
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,7 +42,6 @@ public class Level {
             entityThreads.put(player, Executors.newSingleThreadScheduledExecutor());
         }
         superPelletCount = countRemainingSuperPellets();
-
     }
 
     public Board getBoard() {
@@ -147,6 +145,8 @@ public class Level {
                     g.becomeInvincible();
                 }
             }
+            players.forEach(Player::leaveSuper);
+            edibleEndTime = 0;
         }
     }
 
@@ -177,9 +177,7 @@ public class Level {
     }
 
     private class EntityTask implements Runnable {
-
         private final MovableEntity entity;
-
         public EntityTask(MovableEntity entity) {
             this.entity = entity;
         }
@@ -194,9 +192,7 @@ public class Level {
     }
 
     public interface LevelObserver {
-
         void onLevelWon();
-
         void onLevelLost();
     }
 }

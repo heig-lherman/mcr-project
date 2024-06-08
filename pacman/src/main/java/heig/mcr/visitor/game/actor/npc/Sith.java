@@ -12,6 +12,7 @@ import java.util.Map;
 public class Sith extends Ghost {
     public Sith() {
         super();
+        this.name = "Sith";
     }
 
     @Override

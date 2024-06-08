@@ -13,6 +13,7 @@ public class Luke extends Ghost {
 
     public Luke() {
         super();
+        this.name = "Luke";
     }
 
     @Override

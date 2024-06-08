@@ -11,7 +11,6 @@ public abstract class Entity implements Interactable {
 
     private Cell cell;
     private Direction direction = Direction.UP;
-
     public Direction getDirection() {
         return direction;
     }

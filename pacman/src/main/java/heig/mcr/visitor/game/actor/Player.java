@@ -10,7 +10,6 @@ import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.util.Map;
 
 public class Player extends MovableEntity implements Interactor {
@@ -37,7 +36,13 @@ public class Player extends MovableEntity implements Interactor {
     }
 
     public void becomeSuper() {
+        System.out.println("Player enters in super mode");
         superMode = true;
+    }
+
+    public void leaveSuper() {
+        System.out.println("Player leaves super mode");
+        superMode = false;
     }
 
     public void setRequestedDirection(Direction requestedDirection) {
@@ -108,31 +113,37 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(RandomGhost ghost) {
-            System.out.println("Ghost eaten");
+            handleGhostInteraction(ghost);
         }
 
         @Override
         public void interactWith(Vader vader) {
+            handleGhostInteraction(vader);
         }
 
         @Override
         public void interactWith(Luke luke) {
-
+            handleGhostInteraction(luke);
         }
 
         @Override
         public void interactWith(Sith sith) {
-
+            handleGhostInteraction(sith);
         }
 
         @Override
         public void interactWith(StormTrooper stormTrooper) {
-
+            handleGhostInteraction(stormTrooper);
         }
 
         @Override
         public void interactWith(BobaFett bobaFett) {
+            handleGhostInteraction(bobaFett);
+        }
 
+        private void handleGhostInteraction(Ghost ghost) {
+            System.out.println("Killed by " + ghost);
+            kill();
         }
     }
 
@@ -180,6 +191,7 @@ public class Player extends MovableEntity implements Interactor {
         public void interactWith(SuperPellet superPellet) {
             System.out.println("Super pellet eaten");
             super.interactWith(superPellet);
+            becomeSuper();
         }
     }
 }

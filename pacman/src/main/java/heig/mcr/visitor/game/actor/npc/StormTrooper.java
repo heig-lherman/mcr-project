@@ -12,6 +12,7 @@ public class StormTrooper extends Ghost{
 
     public StormTrooper() {
         super();
+        this.name = "Storm Trooper";
     }
 
     @Override

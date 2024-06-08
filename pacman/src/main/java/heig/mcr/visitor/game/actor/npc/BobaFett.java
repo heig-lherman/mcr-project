@@ -12,6 +12,7 @@ import java.util.Map;
 public class BobaFett extends Ghost {
     public BobaFett() {
         super();
+        this.name = "Boba Fett";
     }
 
     @Override
