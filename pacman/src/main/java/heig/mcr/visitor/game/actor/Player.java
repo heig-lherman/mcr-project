@@ -158,33 +158,34 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(RandomGhost ghost) {
-            System.out.println("Ghost eaten Super");
-            ghost.setCell(ghost.getInitialCell());
+            handleBaseSuperInteraction(ghost);
         }
 
         @Override
         public void interactWith(Vader vader) {
-            vader.setCell(vader.getInitialCell());
+            handleBaseSuperInteraction(vader);
         }
 
         @Override
         public void interactWith(Luke luke) {
-            luke.setCell(luke.getInitialCell());
+            System.out.println("Killed by " + luke + "while trying to eat him");
+            kill();
         }
 
         @Override
         public void interactWith(Sith sith) {
-            sith.setCell(sith.getInitialCell());
+            handleBaseSuperInteraction(sith);
         }
 
         @Override
         public void interactWith(StormTrooper stormTrooper) {
-            stormTrooper.setCell(stormTrooper.getInitialCell());
+            System.out.println(stormTrooper + " eaten and removed from the game");
+            stormTrooper.leaveCell();
         }
 
         @Override
         public void interactWith(BobaFett bobaFett) {
-            bobaFett.setCell(bobaFett.getInitialCell());
+            handleBaseSuperInteraction(bobaFett);
         }
 
         @Override
@@ -192,6 +193,11 @@ public class Player extends MovableEntity implements Interactor {
             System.out.println("Super pellet eaten");
             super.interactWith(superPellet);
             becomeSuper();
+        }
+
+        private void handleBaseSuperInteraction(Ghost ghost) {
+            System.out.println(ghost + " eaten and respawned in his cell");
+            ghost.setCell(ghost.getInitialCell());
         }
     }
 }
