@@ -7,21 +7,21 @@ import heig.mcr.visitor.game.actor.npc.*;
 
 public interface InteractionVisitor {
 
-    void interactWith(Player player);
+    void visit(Player player);
 
     // Pellets
-    void interactWith(Pellet pellet);
+    void visit(Pellet pellet);
 
-    void interactWith(SuperPellet pellet);
+    void visit(SuperPellet pellet);
 
     // Ghosts
-    void interactWith(Vader vader);
+    void visit(Vader vader);
 
-    void interactWith(Luke luke);
+    void visit(Luke luke);
 
-    void interactWith(Sith sith);
+    void visit(Sith sith);
 
-    void interactWith(StormTrooper stormTrooper);
+    void visit(StormTrooper stormTrooper);
 
-    void interactWith(BobaFett bobaFett);
+    void visit(BobaFett bobaFett);
 }

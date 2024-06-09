@@ -31,13 +31,13 @@ public class Sith extends Ghost {
     }
 
     @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public void accept(InteractionVisitor v) {
+        v.visit(this);
     }
 
     @Override
     public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
+        other.accept(handler);
     }
 
     private class SithInteractionHandler extends GhostInteractionHandler {

@@ -9,35 +9,35 @@ import heig.mcr.visitor.handler.InteractionVisitor;
 public abstract class AbstractInteractionVisitor implements InteractionVisitor {
 
     @Override
-    public void interactWith(Player player) {
+    public void visit(Player player) {
     }
 
     @Override
-    public void interactWith(Pellet pellet) {
+    public void visit(Pellet pellet) {
     }
 
     @Override
-    public void interactWith(SuperPellet superPellet) {
-        this.interactWith((Pellet) superPellet);
+    public void visit(SuperPellet superPellet) {
+        this.visit((Pellet) superPellet);
     }
 
     @Override
-    public void interactWith(Vader vader) {
+    public void visit(Vader vader) {
     }
 
     @Override
-    public void interactWith(Luke luke) {
+    public void visit(Luke luke) {
     }
 
     @Override
-    public void interactWith(Sith sith) {
+    public void visit(Sith sith) {
     }
 
     @Override
-    public void interactWith(StormTrooper stormTrooper) {
+    public void visit(StormTrooper stormTrooper) {
     }
 
     @Override
-    public void interactWith(BobaFett bobaFett) {
+    public void visit(BobaFett bobaFett) {
     }
 }

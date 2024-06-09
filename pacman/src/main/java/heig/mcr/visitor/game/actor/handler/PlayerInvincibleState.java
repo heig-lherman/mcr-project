@@ -67,33 +67,33 @@ public class PlayerInvincibleState extends PlayerState {
 
     // Interactions
     @Override
-    public void interactWith(Vader vader) {
+    public void visit(Vader vader) {
         System.out.printf("%s is eaten by %s%n", vader, getPlayer());
         vader.setCell(vader.getInitialCell());
         setRedSprites();
     }
 
     @Override
-    public void interactWith(Luke luke) {
+    public void visit(Luke luke) {
         System.out.printf("%s killed by %s while trying to eat him%n", getPlayer(), luke);
         // Special kill case since Luke cannot be eaten
         getPlayer().setState(new PlayerDeadState(getPlayer()));
     }
 
     @Override
-    public void interactWith(Sith sith) {
+    public void visit(Sith sith) {
         System.out.printf("%s is eaten by %s%n", sith, getPlayer());
         sith.setCell(sith.getInitialCell());
     }
 
     @Override
-    public void interactWith(StormTrooper stormTrooper) {
+    public void visit(StormTrooper stormTrooper) {
         System.out.printf("%s is eaten by %s and removed from the game%n", stormTrooper, getPlayer());
         stormTrooper.leaveCell();
     }
 
     @Override
-    public void interactWith(BobaFett bobaFett) {
+    public void visit(BobaFett bobaFett) {
         System.out.printf("%s is eaten by %s%n", bobaFett, getPlayer());
         System.out.printf("%s is moving a bit faster after eating %s%n", getPlayer(), bobaFett);
         bobaFett.setCell(bobaFett.getInitialCell());

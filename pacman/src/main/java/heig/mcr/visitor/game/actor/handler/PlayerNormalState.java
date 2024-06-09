@@ -32,7 +32,7 @@ public class PlayerNormalState extends PlayerState {
     // Interactions
 
     @Override
-    public void interactWith(BobaFett bobaFett) {
+    public void visit(BobaFett bobaFett) {
         System.out.printf("%s is not dangerous and is moving a bit faster after meeting %s%n", bobaFett, getPlayer());
         bobaFett.moveFaster();
     }

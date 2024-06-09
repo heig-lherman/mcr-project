@@ -93,7 +93,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
 
     protected class GhostInteractionHandler extends AbstractInteractionVisitor {
         @Override
-        public void interactWith(Player player) {
+        public void visit(Player player) {
             if (!player.isScary()) {
                 System.out.printf("Player killed by %s%n", Ghost.this);
                 player.kill();

@@ -23,7 +23,7 @@ public class Pellet extends Entity {
     }
 
     @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public void accept(InteractionVisitor v) {
+        v.visit(this);
     }
 }

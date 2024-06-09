@@ -47,13 +47,13 @@ public abstract class PlayerState extends AbstractInteractionVisitor {
     // Standard interactions
 
     @Override
-    public void interactWith(Pellet pellet) {
+    public void visit(Pellet pellet) {
         pellet.leaveCell();
     }
 
     @Override
-    public void interactWith(SuperPellet superPellet) {
+    public void visit(SuperPellet superPellet) {
         eatSuperPellet();
-        super.interactWith(superPellet);
+        super.visit(superPellet);
     }
 }

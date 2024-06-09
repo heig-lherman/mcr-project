@@ -31,13 +31,13 @@ public class Vader extends Ghost {
     }
 
     @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public void accept(InteractionVisitor v) {
+        v.visit(this);
     }
 
     @Override
     public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
+        other.accept(handler);
     }
 
     private class VaderInteractionHandler extends GhostInteractionHandler {

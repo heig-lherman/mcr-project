@@ -74,13 +74,13 @@ public class Player extends MovableEntity implements Interactor {
     }
 
     @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public void accept(InteractionVisitor v) {
+        v.visit(this);
     }
 
     @Override
     public void interactWith(Interactable other) {
-        other.acceptInteraction(state);
+        other.accept(state);
     }
 
     @Override

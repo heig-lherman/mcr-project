@@ -17,7 +17,7 @@ public class SuperPellet extends Pellet {
     }
 
     @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public void accept(InteractionVisitor v) {
+        v.visit(this);
     }
 }

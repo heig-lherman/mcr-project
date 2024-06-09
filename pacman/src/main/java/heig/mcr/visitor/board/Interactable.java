@@ -4,5 +4,5 @@ import heig.mcr.visitor.handler.InteractionVisitor;
 
 public interface Interactable {
 
-    void acceptInteraction(InteractionVisitor v);
+    void accept(InteractionVisitor v);
 }
