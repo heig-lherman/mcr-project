@@ -16,14 +16,13 @@ public class Player extends MovableEntity implements Interactor {
 
     private final InteractionVisitor normalHandler = new NormalInteractionHandler();
     private final InteractionVisitor superHandler = new SuperInteractionHandler();
+    private InteractionVisitor currentHandler = normalHandler;
 
     private Map<Direction, AnimatedSprite> directedSprites;
     private final AnimatedSprite deathSprites;
 
     private Direction requestedDirection = Direction.UP;
     private boolean alive = true;
-
-    private boolean superMode = false;
 
     public Player() {
         var sprites = PacmanSprites.getInstance();
@@ -38,12 +37,12 @@ public class Player extends MovableEntity implements Interactor {
 
     public void becomeSuper() {
         System.out.println("Player enters in super mode");
-        superMode = true;
+        currentHandler = superHandler;
     }
 
     public void leaveSuper() {
         System.out.println("Player leaves super mode");
-        superMode = false;
+        currentHandler = normalHandler;
     }
 
     public void setRequestedDirection(Direction requestedDirection) {
@@ -95,13 +94,8 @@ public class Player extends MovableEntity implements Interactor {
 
     @Override
     public void interactWith(Interactable other) {
-        if (superMode) {
-            other.acceptInteraction(superHandler);
-        } else {
-            other.acceptInteraction(normalHandler);
-        }
+        other.acceptInteraction(currentHandler);
     }
-
 
     private class NormalInteractionHandler extends AbstractInteractionVisitor {
 
