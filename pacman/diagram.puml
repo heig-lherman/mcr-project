@@ -26,7 +26,6 @@ class GroundCell {
 class StormTrooper {
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
-	+ getNextMove(): Direction
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 }
@@ -95,6 +94,11 @@ interface Level$LevelObserver {
 abstract class Ghost {
 	- state: GhostState
 	- directedSprites: Map<Direction,? extends Sprite>
+	- pathToPlayer: List<Direction>
+	- pathIndex: int
+	- moveCounter: int
+	# pathUpdateInterval: int
+	- moveInterval: int
 	+ getLayer(): int
 	+ getSprite(): Sprite
 	+ getMoveInterval(): int
@@ -105,6 +109,8 @@ abstract class Ghost {
 	~ {abstract}getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ {abstract}getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	- changeSprite(): void
+	+ getNextMove(): Direction
+	- updatePathToPlayer(): void
 }
 
 
@@ -163,12 +169,15 @@ interface InteractionVisitor {
 }
 
 class BobaFett {
+	- moveInterval: int
+	+ moveFaster(): void
+	+ getMoveInterval(): int
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
-	+ getNextMove(): Direction
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 }
+
 
 abstract class GhostState {
 	# ghost: Ghost
@@ -188,13 +197,10 @@ class Pathfinding {
 }
 
 class Pathfinding$Node {
-	- direction: Direction
-	- cell: Cell
-	- parent: Node
-	+ getPath(): List<Direction>
-	+ parent(): Node
-	+ direction(): Direction
-	+ cell(): Cell
+	~ direction: Direction
+	~ cell: Cell
+	~ parent: Node
+	~ getPath(): List<Direction>
 }
 
 
@@ -323,7 +329,6 @@ class InvincibleState {
 class Sith {
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
-	+ getNextMove(): Direction
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 }
@@ -345,7 +350,6 @@ abstract class AbstractInteractionVisitor {
 class Luke {
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
-	+ getNextMove(): Direction
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ becomeEdible(): void
@@ -364,11 +368,13 @@ class ButtonPanel {
 class Player {
 	- normalHandler: InteractionVisitor
 	- superHandler: InteractionVisitor
+	- currentHandler: InteractionVisitor
 	- directedSprites: Map<Direction,AnimatedSprite>
 	- deathSprites: AnimatedSprite
+	- DEFAULT_INTERVAL: int
 	- requestedDirection: Direction
 	- alive: boolean
-	- superMode: boolean
+	- moveInterval: int
 	+ isAlive(): boolean
 	+ becomeSuper(): void
 	+ leaveSuper(): void
@@ -377,6 +383,7 @@ class Player {
 	+ getNextMove(): Direction
 	+ getSprite(): Sprite
 	+ kill(): void
+	+ changeToRed(): void
 	+ getLayer(): int
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
@@ -446,10 +453,10 @@ class GameWindow {
 	+ onLevelLost(): void
 }
 
+
 class Vader {
 	+ acceptInteraction(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
-	+ getNextMove(): Direction
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 }
@@ -484,6 +491,7 @@ class PacmanSprites {
 	- {static} DIRECTED_ORDER: Direction[]
 	- {static} INSTANCE: PacmanSprites
 	+ getPacman(): Map<Direction,AnimatedSprite>
+	+ getRedPacman(): Map<Direction,AnimatedSprite>
 	+ getPacmanDeath(): AnimatedSprite
 	+ getBackground(): Sprite
 	+ getPellet(): Sprite
