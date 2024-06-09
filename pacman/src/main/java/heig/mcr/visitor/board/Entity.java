@@ -10,7 +10,6 @@ public abstract class Entity implements Interactable {
 
     private Cell cell;
     private Direction direction = Direction.UP;
-
     private final Cell initialCell;
 
     protected Entity(Cell initialCell) {

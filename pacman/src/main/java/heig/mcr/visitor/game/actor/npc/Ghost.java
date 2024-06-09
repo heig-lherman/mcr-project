@@ -18,12 +18,12 @@ import java.util.Map;
 
 public abstract class Ghost extends MovableEntity implements Interactor {
 
-    private List<Direction> pathToPlayer = Collections.emptyList();
+    private List<Direction> pathToTarget = Collections.emptyList();
     private int pathIndex = 0;
     private int moveCounter = 0;
 
     private boolean blinking = false;
-
+    private boolean isScared = false;
     private final int pathUpdateInterval;
 
     protected Ghost(Cell initialCell, int pathUpdateInterval) {
@@ -38,8 +38,11 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     public Sprite getSprite() {
         boolean hasScaryPlayer = GameWindow.getInstance().getActiveLevel().hasScaryPlayer();
         if (hasScaryPlayer) {
+            this.isScared = true;
+            updatePathToHome();
             return getEdibleSprites().get(getDirection());
         } else {
+            this.isScared = false;
             return getInvincibleSprites().get(getDirection());
         }
     }
@@ -62,12 +65,13 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     @Override
     public Direction getNextMove() {
         moveCounter++;
-        if (moveCounter % pathUpdateInterval == 1) {
+        boolean hasScaryPlayer = GameWindow.getInstance().getActiveLevel().hasScaryPlayer();
+        if (moveCounter % pathUpdateInterval == 1 && !hasScaryPlayer) {
             updatePathToPlayer();
         }
 
-        if (!pathToPlayer.isEmpty() && pathIndex < pathToPlayer.size()) {
-            Direction nextMove = pathToPlayer.get(pathIndex);
+        if (!pathToTarget.isEmpty() && pathIndex < pathToTarget.size()) {
+            Direction nextMove = pathToTarget.get(pathIndex);
             pathIndex++;
             return nextMove;
         }
@@ -76,13 +80,21 @@ public abstract class Ghost extends MovableEntity implements Interactor {
         return Direction.random();
     }
 
+    private void updatePathTo(Cell target) {
+        pathToTarget = Pathfinding.findShortestPath(this.getCell(), target, this);
+        pathIndex = 0;
+    }
+
+    private void updatePathToHome() {
+        updatePathTo(getInitialCell());
+    }
+
     private void updatePathToPlayer() {
         Player player = Pathfinding.findNearestEntity(Player.class, this.getCell());
         if (player != null) {
-            pathToPlayer = Pathfinding.findShortestPath(this.getCell(), player.getCell(), this);
-            pathIndex = 0;
+            updatePathTo(player.getCell());
         } else {
-            pathToPlayer = List.of();
+            pathToTarget = List.of();
         }
     }
 
