@@ -9,9 +9,14 @@ import heig.mcr.visitor.window.sprite.Sprite;
  */
 public abstract class Entity implements Interactable {
 
+    private static final int SPEECH_DEBOUNCE = 10000;
+
     private Cell cell;
     private Direction direction = Direction.UP;
+    private long lastSpeech = 0;
+
     private final Cell initialCell;
+
 
     protected Entity(Cell initialCell) {
         this.initialCell = initialCell;
@@ -53,7 +58,11 @@ public abstract class Entity implements Interactable {
     }
 
     public void spawnSpeech(String text) {
-        new SpeechBubble(cell.getNeighbor(Direction.UP), text);
+        long now = System.currentTimeMillis();
+        if (now - lastSpeech > SPEECH_DEBOUNCE) {
+            new SpeechBubble(cell.getNeighbor(Direction.UP), text);
+            lastSpeech = now;
+        }
     }
 
     public abstract int getLayer();
