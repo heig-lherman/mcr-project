@@ -49,6 +49,10 @@ public final class PacmanSprites extends SpriteRegister {
         return loadSprite("/sprites/superpellet.png");
     }
 
+    public Sprite getSpeechBackground() {
+        return loadSprite("/sprites/speech-background.png");
+    }
+
     public Map<Direction, AnimatedSprite> getRedGhost() {
         return loadDirectedSprites("/sprites/ghost-red.png", 2, 16,16);
     }

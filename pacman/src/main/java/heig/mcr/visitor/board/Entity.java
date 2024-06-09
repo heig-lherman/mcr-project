@@ -1,5 +1,6 @@
 package heig.mcr.visitor.board;
 
+import heig.mcr.visitor.game.actor.SpeechBubble;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
 
@@ -49,6 +50,10 @@ public abstract class Entity implements Interactable {
             cell.removeOccupant(this);
             cell = null;
         }
+    }
+
+    public void spawnSpeech(String text) {
+        new SpeechBubble(cell.getNeighbor(Direction.UP), text);
     }
 
     public abstract int getLayer();
