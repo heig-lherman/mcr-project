@@ -9,6 +9,7 @@ import heig.mcr.visitor.math.Direction;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Level {
@@ -18,7 +19,7 @@ public class Level {
 
     private final Board board;
 
-    private final Map<MovableEntity, ExecutorService> entityThreads = new HashMap<>();
+    private final Map<MovableEntity, ScheduledExecutorService> entityThreads = new HashMap<>();
     private final List<Player> players = new LinkedList<>();
     private final List<LevelObserver> observers = new LinkedList<>();
 
@@ -104,10 +105,9 @@ public class Level {
     private void startThreads() {
         for (var entity : entityThreads.keySet()) {
             var service = Executors.newSingleThreadScheduledExecutor();
-            service.scheduleAtFixedRate(
+            service.schedule(
                     new EntityTask(entity),
                     entity.getMoveInterval() / 2,
-                    entity.getMoveInterval(),
                     TimeUnit.MILLISECONDS
             );
 
@@ -158,6 +158,7 @@ public class Level {
     }
 
     private class EntityTask implements Runnable {
+
         private final MovableEntity entity;
 
         public EntityTask(MovableEntity entity) {
@@ -172,6 +173,8 @@ public class Level {
             } else {
                 System.out.println("nextMove is null!");
             }
+
+            entityThreads.get(entity).schedule(this, entity.getMoveInterval(), TimeUnit.MILLISECONDS);
         }
     }
 
