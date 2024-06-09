@@ -8,10 +8,22 @@ import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import java.util.Map;
 
 public class BobaFett extends Ghost {
+    private int moveInterval = 300;// starts faster than the others
+
     public BobaFett() {
         super();
         this.name = "Boba Fett";
         this.pathUpdateInterval = 8;
+    }
+
+    public void moveFaster() {
+        if (moveInterval - 50 > 0)
+            moveInterval -= 50;
+    }
+
+    @Override
+    public int getMoveInterval() {
+        return moveInterval;
     }
 
     @Override
@@ -20,7 +32,8 @@ public class BobaFett extends Ghost {
     }
 
     @Override
-    public void interactWith(Interactable other) { }
+    public void interactWith(Interactable other) {
+    }
 
     @Override
     Map<Direction, AnimatedSprite> getEdibleSprites() {

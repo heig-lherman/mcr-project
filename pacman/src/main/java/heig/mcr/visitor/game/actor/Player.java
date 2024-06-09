@@ -20,9 +20,10 @@ public class Player extends MovableEntity implements Interactor {
 
     private Map<Direction, AnimatedSprite> directedSprites;
     private final AnimatedSprite deathSprites;
-
+    private final int DEFAULT_INTERVAL = 300;
     private Direction requestedDirection = Direction.UP;
     private boolean alive = true;
+    private int moveInterval = DEFAULT_INTERVAL;
 
     public Player() {
         var sprites = PacmanSprites.getInstance();
@@ -43,6 +44,7 @@ public class Player extends MovableEntity implements Interactor {
     public void leaveSuper() {
         System.out.println("Player leaves super mode");
         currentHandler = normalHandler;
+        moveInterval = DEFAULT_INTERVAL;
     }
 
     public void setRequestedDirection(Direction requestedDirection) {
@@ -51,7 +53,7 @@ public class Player extends MovableEntity implements Interactor {
 
     @Override
     public int getMoveInterval() {
-        return 200;
+        return moveInterval;
     }
 
     @Override

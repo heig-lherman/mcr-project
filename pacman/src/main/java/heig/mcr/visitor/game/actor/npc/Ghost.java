@@ -7,6 +7,7 @@ import heig.mcr.visitor.game.actor.state.GhostState;
 import heig.mcr.visitor.game.actor.state.InvincibleState;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.math.Pathfinding;
+import heig.mcr.visitor.math.RandomGenerator;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 import java.util.List;
@@ -20,12 +21,14 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     private int pathIndex;
     private int moveCounter = 0;
     protected int pathUpdateInterval = 10;
+    private int moveInterval = 500;
 
     protected Ghost() {
         this.directedSprites = getInvincibleSprites();
         this.state = new InvincibleState(this);
         this.pathToPlayer = List.of();
         this.pathIndex = 0;
+        this.moveInterval -= RandomGenerator.getInstance().nextInt(150);
     }
 
     @Override
@@ -40,8 +43,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
 
     @Override
     public int getMoveInterval() {
-        // TODO should probably be randomized and ghost-specific
-        return 500;
+        return moveInterval;
     }
 
     public void setState(GhostState state) {
@@ -66,7 +68,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     abstract Map<Direction, AnimatedSprite> getInvincibleSprites();
 
     private void changeSprite() {
-        if (isEdible()){
+        if (isEdible()) {
             directedSprites = getEdibleSprites();
             for (Direction direction : directedSprites.keySet()) {
                 directedSprites.get(direction).startBlinking();
@@ -80,7 +82,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     }
 
     @Override
-    public Direction getNextMove(){
+    public Direction getNextMove() {
         moveCounter++;
         if (moveCounter % pathUpdateInterval == 1) {
             updatePathToPlayer();
