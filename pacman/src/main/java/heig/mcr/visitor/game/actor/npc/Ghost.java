@@ -23,7 +23,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     private int moveCounter = 0;
 
     private boolean blinking = false;
-    private boolean isScared = false;
+    private boolean goingHome = false;
     private final int pathUpdateInterval;
 
     protected Ghost(Cell initialCell, int pathUpdateInterval) {
@@ -38,11 +38,8 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     public Sprite getSprite() {
         boolean hasScaryPlayer = GameWindow.getInstance().getActiveLevel().hasScaryPlayer();
         if (hasScaryPlayer) {
-            this.isScared = true;
-            updatePathToHome();
             return getEdibleSprites().get(getDirection());
         } else {
-            this.isScared = false;
             return getInvincibleSprites().get(getDirection());
         }
     }
@@ -59,14 +56,17 @@ public abstract class Ghost extends MovableEntity implements Interactor {
 
     @Override
     public int getMoveInterval() {
+        if (goingHome) {
+            return 50;
+        }
+
         return RandomGenerator.getInstance().nextInt(350, 500);
     }
 
     @Override
     public Direction getNextMove() {
         moveCounter++;
-        boolean hasScaryPlayer = GameWindow.getInstance().getActiveLevel().hasScaryPlayer();
-        if (moveCounter % pathUpdateInterval == 1 && !hasScaryPlayer) {
+        if (moveCounter % pathUpdateInterval == 1 && !goingHome) {
             updatePathToPlayer();
         }
 
@@ -76,8 +76,18 @@ public abstract class Ghost extends MovableEntity implements Interactor {
             return nextMove;
         }
 
+        if (goingHome) {
+            goingHome = false;
+            updatePathToPlayer();
+        }
+
         // Default to random direction if no path found
         return Direction.random();
+    }
+
+    public void sendHome() {
+        goingHome = true;
+        updatePathToHome();
     }
 
     private void updatePathTo(Cell target) {
@@ -106,7 +116,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     protected class GhostInteractionVisitor extends AbstractInteractionVisitor {
         @Override
         public void visit(Player player) {
-            if (!player.isScary()) {
+            if (!player.isScary() && !goingHome) {
                 System.out.printf("Player killed by %s%n", Ghost.this);
                 player.kill();
             }
