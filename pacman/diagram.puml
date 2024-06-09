@@ -7,71 +7,33 @@
 hide empty members
 skinparam classAttributeIconSize 0
 
-' Hide some elements for the simplified diagram - comment this to get the full
-remove Level$EntityTask
-remove Level*
-remove Cell
-remove WallCell
-remove GroundCell
-remove Sprite
-remove WallSprite
-remove ColorSprite
-remove DefaultSprite
-remove ImageSprite
-remove PacmanSprites
-remove AnimatedSprite
-remove Pathfinding
-remove JPanel
-remove LevelPanel
-remove ButtonPanel
-remove GhostState
-remove SpriteRegister
-remove KeyAdapter
-remove GameWindow*
-remove Vector
-remove RegionOfInterest
-remove RandomGenerator
-remove Direction
-remove DiscreteCoordinates
-remove Board
-remove MapParser
-remove Runnable
-remove Pathfinding$Node
-remove DoorCell
-remove GameFrame
-remove GameFrame*
-
 ' Additions
 remove Main
 
-' Board "1"-"*" Cell: contains >
-' Entity "1"-"1" Cell: placed on >
-' SpriteRegister "1"-"*" Sprite: puts in cache >
-
-
 ' REMOVE
-' Cell <\|-- GroundCell
-' Level +-- Level$EntityTask
-' Runnable <\|.. Level$EntityTask
-' Level +-- Level$LevelObserver
-' Pathfinding +-- Pathfinding$Node
-' Sprite <\|.. DefaultSprite
-' Cell <\|-- WallCell
-' Sprite <\|.. ColorSprite
-' ColorSprite <\|-- WallSprite
-' JFrame <\|-- GameFrame
-' GameFrame +-- GameFrame$KeyListener
-' KeyAdapter <\|-- GameFrame$KeyListener
-' GhostState <\|-- EdibleState
-' GhostState <\|-- InvincibleState
-' JPanel <\|-- ButtonPanel
-' Sprite <\|.. ImageSprite
-' JPanel <\|-- LevelPanel
-' LevelObserver <\|.. GameWindow
-' SpriteRegister <\|-- PacmanSprites
-' Sprite <\|.. AnimatedSprite
+'#General remove diagrams
 
 ' ENDSTATIC
+class PlayerInvincibleVisitor {
+	- {static} INVINCIBLE_DURATION: int
+	- {static} EXECUTOR: ScheduledExecutorService
+	- endFuture: ScheduledFuture<?>
+	- blinkFuture: ScheduledFuture<?>
+	+ isScary(): boolean
+	+ isInteractable(): boolean
+	+ eatSuperPellet(): void
+	+ kill(): void
+	+ dispose(): void
+	+ startTimer(): void
+	+ endInvincibility(): void
+	+ visit(vader: Vader): void
+	+ visit(luke: Luke): void
+	+ visit(sith: Sith): void
+	+ visit(stormTrooper: StormTrooper): void
+	+ visit(bobaFett: BobaFett): void
+}
+
+
 class GroundCell {
 	+ isWalkableBy(_any: Entity): boolean
 	+ getSprite(): Sprite
@@ -83,15 +45,15 @@ class StormTrooper {
 	- handler: InteractionVisitor
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
 }
 
 
-class StormTrooper$StormTrooperInteractionHandler {
+class StormTrooper$StormTrooperInteractionVisitor {
 }
-class PlayerDeadState {
+class PlayerDeadVisitor {
 	- deathSprites: AnimatedSprite
 	+ isScary(): boolean
 	+ isInteractable(): boolean
@@ -103,7 +65,7 @@ class PlayerDeadState {
 
 class SuperPellet {
 	+ getSprite(): Sprite
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 }
 
 class Main {
@@ -122,6 +84,14 @@ abstract class Cell {
 	+ {abstract}getSprite(): Sprite
 }
 
+
+class PlayerNormalVisitor {
+	+ isScary(): boolean
+	+ isInteractable(): boolean
+	+ eatSuperPellet(): void
+	+ kill(): void
+	+ visit(bobaFett: BobaFett): void
+}
 
 class Level {
 	- moveLock: Object
@@ -177,8 +147,8 @@ abstract class Ghost {
 }
 
 
-class Ghost$GhostInteractionHandler {
-	+ interactWith(player: Player): void
+class GhostInteractionVisitor {
+	+ visit(player: Player): void
 }
 
 class DiscreteCoordinates {
@@ -192,8 +162,8 @@ class DiscreteCoordinates {
 	+ getNeighbours(): List<DiscreteCoordinates>
 	+ equals(o: Object): boolean
 	+ hashCode(): int
-	+ x(): int
 	+ y(): int
+	+ x(): int
 }
 
 
@@ -225,14 +195,14 @@ class RandomGenerator {
 
 
 interface InteractionVisitor {
-	~ interactWith(player: Player): void
-	~ interactWith(pellet: Pellet): void
-	~ interactWith(pellet: SuperPellet): void
-	~ interactWith(vader: Vader): void
-	~ interactWith(luke: Luke): void
-	~ interactWith(sith: Sith): void
-	~ interactWith(stormTrooper: StormTrooper): void
-	~ interactWith(bobaFett: BobaFett): void
+	~ visit(player: Player): void
+	~ visit(pellet: Pellet): void
+	~ visit(pellet: SuperPellet): void
+	~ visit(vader: Vader): void
+	~ visit(luke: Luke): void
+	~ visit(sith: Sith): void
+	~ visit(stormTrooper: StormTrooper): void
+	~ visit(bobaFett: BobaFett): void
 }
 
 class BobaFett {
@@ -243,14 +213,14 @@ class BobaFett {
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ moveFaster(): void
 	+ getMoveInterval(): int
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
 }
 
 
 interface Interactable {
-	~ acceptInteraction(v: InteractionVisitor): void
+	~ accept(v: InteractionVisitor): void
 }
 
 class Pathfinding {
@@ -316,22 +286,6 @@ class Vector {
 }
 
 
-abstract class PlayerState {
-	- player: Player
-	- sprites: Map<Direction,AnimatedSprite>
-	# getPlayer(): Player
-	+ getSprite(): Sprite
-	# setRedSprites(): void
-	+ {abstract}isScary(): boolean
-	+ {abstract}isInteractable(): boolean
-	+ {abstract}eatSuperPellet(): void
-	+ {abstract}kill(): void
-	+ dispose(): void
-	+ interactWith(pellet: Pellet): void
-	+ interactWith(superPellet: SuperPellet): void
-}
-
-
 class ColorSprite {
 	- color: Color
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
@@ -350,10 +304,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ x(): int
-	+ h(): int
-	+ y(): int
 	+ w(): int
+	+ y(): int
+	+ h(): int
+	+ x(): int
 }
 
 
@@ -365,28 +319,8 @@ class DoorCell {
 class Pellet {
 	+ getLayer(): int
 	+ getSprite(): Sprite
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 }
-
-class PlayerInvincibleState {
-	- {static} INVINCIBLE_DURATION: int
-	- {static} EXECUTOR: ScheduledExecutorService
-	- endFuture: ScheduledFuture<?>
-	- blinkFuture: ScheduledFuture<?>
-	+ isScary(): boolean
-	+ isInteractable(): boolean
-	+ eatSuperPellet(): void
-	+ kill(): void
-	+ dispose(): void
-	+ startTimer(): void
-	+ endInvincibility(): void
-	+ interactWith(vader: Vader): void
-	+ interactWith(luke: Luke): void
-	+ interactWith(sith: Sith): void
-	+ interactWith(stormTrooper: StormTrooper): void
-	+ interactWith(bobaFett: BobaFett): void
-}
-
 
 class WallSprite {
 	- {static} WALL_COLOR: Color
@@ -419,13 +353,13 @@ class Sith {
 	- handler: InteractionVisitor
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
 }
 
 
-class Sith$SithInteractionHandler {
+class Sith$SithInteractionVisitor {
 }
 abstract class MovableEntity {
 	+ {abstract}getMoveInterval(): int
@@ -434,14 +368,14 @@ abstract class MovableEntity {
 }
 
 abstract class AbstractInteractionVisitor {
-	+ interactWith(player: Player): void
-	+ interactWith(pellet: Pellet): void
-	+ interactWith(superPellet: SuperPellet): void
-	+ interactWith(vader: Vader): void
-	+ interactWith(luke: Luke): void
-	+ interactWith(sith: Sith): void
-	+ interactWith(stormTrooper: StormTrooper): void
-	+ interactWith(bobaFett: BobaFett): void
+	+ visit(player: Player): void
+	+ visit(pellet: Pellet): void
+	+ visit(superPellet: SuperPellet): void
+	+ visit(vader: Vader): void
+	+ visit(luke: Luke): void
+	+ visit(sith: Sith): void
+	+ visit(stormTrooper: StormTrooper): void
+	+ visit(bobaFett: BobaFett): void
 }
 
 class Luke {
@@ -449,13 +383,13 @@ class Luke {
 	- handler: InteractionVisitor
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
 }
 
 
-class Luke$LukeInteractionHandler {
+class Luke$LukeInteractionVisitor {
 }
 abstract class SpriteRegister {
 	- spriteCache: Map<String,Sprite>
@@ -469,22 +403,38 @@ class ButtonPanel {
 }
 class Player {
 	- {static} DEFAULT_INTERVAL: int
-	- state: PlayerState
+	- handler: PlayerVisitor
 	- requestedDirection: Direction
 	- moveInterval: int
 	+ isAlive(): boolean
 	+ isScary(): boolean
 	+ getSprite(): Sprite
-	+ setState(state: PlayerState): void
+	+ setHandler(handler: PlayerVisitor): void
 	+ setRequestedDirection(requestedDirection: Direction): void
 	+ getMoveInterval(): int
 	+ setMoveInterval(moveInterval: int): void
 	+ getNextMove(): Direction
 	+ kill(): void
 	+ getLayer(): int
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
+}
+
+
+abstract class PlayerVisitor {
+	- player: Player
+	- sprites: Map<Direction,AnimatedSprite>
+	# getPlayer(): Player
+	+ getSprite(): Sprite
+	# setRedSprites(): void
+	+ {abstract}isScary(): boolean
+	+ {abstract}isInteractable(): boolean
+	+ {abstract}eatSuperPellet(): void
+	+ {abstract}kill(): void
+	+ dispose(): void
+	+ visit(pellet: Pellet): void
+	+ visit(superPellet: SuperPellet): void
 }
 
 
@@ -540,27 +490,19 @@ class Vader {
 	- handler: InteractionVisitor
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ acceptInteraction(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
 	+ toString(): String
 }
 
 
-class Vader$VaderInteractionHandler {
+class Vader$VaderInteractionVisitor {
 }
 interface Sprite {
 	~ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
 	~ slice(roi: RegionOfInterest): Sprite
 	~ getWidth(): int
 	~ getHeight(): int
-}
-
-class PlayerNormalState {
-	+ isScary(): boolean
-	+ isInteractable(): boolean
-	+ eatSuperPellet(): void
-	+ kill(): void
-	+ interactWith(bobaFett: BobaFett): void
 }
 
 abstract class Entity {
@@ -649,51 +591,51 @@ class AnimatedSprite {
 
 
 
+PlayerVisitor <|-- PlayerInvincibleVisitor
 
 Ghost <|-- StormTrooper
-StormTrooper +-- StormTrooper$StormTrooperInteractionHandler
-GhostInteractionHandler <|-- StormTrooper$StormTrooperInteractionHandler
-PlayerState <|-- PlayerDeadState
+StormTrooper +-- StormTrooper$StormTrooperInteractionVisitor
+GhostInteractionVisitor <|-- StormTrooper$StormTrooperInteractionVisitor
+PlayerVisitor <|-- PlayerDeadVisitor
 Pellet <|-- SuperPellet
+PlayerVisitor <|-- PlayerNormalVisitor
 Level +-- Level$EntityTask
 Runnable <|.. Level$EntityTask
 Level +-- Level$LevelObserver
 Interactor <|.. Ghost
 MovableEntity <|-- Ghost
-Ghost +-- Ghost$GhostInteractionHandler
-AbstractInteractionVisitor <|-- Ghost$GhostInteractionHandler
+Ghost +-- GhostInteractionVisitor
+AbstractInteractionVisitor <|-- GhostInteractionVisitor
 Ghost <|-- BobaFett
 Pathfinding +-- Pathfinding$Node
 
 
-AbstractInteractionVisitor <|-- PlayerState
 
 Cell <|-- DoorCell
 Entity <|-- Pellet
-PlayerState <|-- PlayerInvincibleState
 
 
 GameFrame +-- GameFrame$KeyListener
 KeyAdapter <|-- GameFrame$KeyListener
 Ghost <|-- Sith
-Sith +-- Sith$SithInteractionHandler
-GhostInteractionHandler <|-- Sith$SithInteractionHandler
+Sith +-- Sith$SithInteractionVisitor
+GhostInteractionVisitor <|-- Sith$SithInteractionVisitor
 Entity <|-- MovableEntity
 InteractionVisitor <|.. AbstractInteractionVisitor
 Ghost <|-- Luke
-Luke +-- Luke$LukeInteractionHandler
-GhostInteractionHandler <|-- Luke$LukeInteractionHandler
+Luke +-- Luke$LukeInteractionVisitor
+GhostInteractionVisitor <|-- Luke$LukeInteractionVisitor
 
 Interactor <|.. Player
 MovableEntity <|-- Player
+AbstractInteractionVisitor <|-- PlayerVisitor
 
 
 
 GameWindow +-- GameWindow$InstanceHolder
 Ghost <|-- Vader
-Vader +-- Vader$VaderInteractionHandler
-GhostInteractionHandler <|-- Vader$VaderInteractionHandler
-PlayerState <|-- PlayerNormalState
+Vader +-- Vader$VaderInteractionVisitor
+GhostInteractionVisitor <|-- Vader$VaderInteractionVisitor
 Interactable <|.. Entity
 
 
