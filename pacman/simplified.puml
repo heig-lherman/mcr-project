@@ -6,12 +6,17 @@
 
 ' Style
 hide empty members
+' hide members
 skinparam classAttributeIconSize 0
 skinparam ClassFontStyle bold
 skinparam ClassAttributeFontSize 20
 
 ' Hide some elements for the simplified diagram - comment this to get the full
-remove Level$EntityTask
+remove EntityTask
+remove Node
+remove GameKeyListener
+remove GameInstanceHolder
+remove *Storm*
 remove Level*
 remove *Cell*
 remove *Sprite*
@@ -37,12 +42,12 @@ remove Main
 
 '# Default implementations not related to the patterns, remove patterns are grouped with new links
 remove AbstractInteractionVisitor
-remove Ghost$GhostInteractionVisitor
 remove GhostInteractionVisitor
-InteractionVisitor <|.. StormTrooper$StormTrooperInteractionVisitor
-InteractionVisitor <|.. Sith$SithInteractionVisitor
-InteractionVisitor <|.. Luke$LukeInteractionVisitor
-InteractionVisitor <|.. Vader$VaderInteractionVisitor
+remove GhostInteractionVisitor
+InteractionVisitor <|.. StormTrooperInteractionVisitor
+InteractionVisitor <|.. SithInteractionVisitor
+InteractionVisitor <|.. LukeInteractionVisitor
+InteractionVisitor <|.. VaderInteractionVisitor
 InteractionVisitor <|.. PlayerVisitor
 
 remove MovableEntity
@@ -53,6 +58,7 @@ Interactable <|.. Pellet
 
 remove Interactor
 
+InteractionVisitor -[hidden]- Luke
 
 ' Additions
 
@@ -72,7 +78,7 @@ Ghost <|- StormTrooper
 Ghost <|-- Vader
 Ghost <|-- Luke
 Ghost <|-- Sith
-Ghost <|- BobaFett
+BobaFett -|>  Ghost
 
 ' \t\+ interactWith\(other: Interactable\).*\n
 
@@ -81,6 +87,10 @@ Ghost <|- BobaFett
 Player -- PlayerVisitor: handler >
 
 'TODO: should we make links for Sith.handler and co ??
+'TODO: should we delete PlayerVisitor
+
+'Delete subclasses prefix ending in $
+' [A-Z][a-z]+\$
 
 ' ENDSTATIC
 class PlayerInvincibleVisitor {
@@ -109,7 +119,7 @@ class StormTrooper {
 }
 
 
-class StormTrooper$StormTrooperInteractionVisitor {
+class StormStormTrooperInteractionVisitor {
 }
 class PlayerDeadVisitor {
 	+ isScary(): boolean
@@ -172,13 +182,13 @@ class Level {
 }
 
 
-class Level$EntityTask {
+class EntityTask {
 	- entity: MovableEntity
 	+ run(): void
 }
 
 
-interface Level$LevelObserver {
+interface LevelObserver {
 	+ onLevelWon(): void
 	+ onLevelLost(): void
 }
@@ -201,7 +211,7 @@ abstract class Ghost {
 }
 
 
-class Ghost$GhostInteractionVisitor {
+class GhostInteractionVisitor {
 	+ visit(player: Player): void
 }
 
@@ -212,7 +222,7 @@ class SpeechBubble {
 }
 
 
-class SpeechBubble$SpeechBubbleSprite {
+class SpeechSpeechBubbleSprite {
 	- lastUpdate: long
 	- opacity: int
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
@@ -274,7 +284,7 @@ class Pathfinding {
 	+ {static} findShortestPath(start: Cell, target: Cell, entity: Entity): List<Direction>
 }
 
-class Pathfinding$Node {
+class Node {
 	~ direction: Direction
 	~ cell: Cell
 	~ parent: Node
@@ -375,7 +385,7 @@ class GameFrame {
 }
 
 
-class GameFrame$KeyListener {
+class GameKeyListener {
 	- keybindings: Map<Integer,Consumer<Level>>
 	+ keyPressed(e: KeyEvent): void
 }
@@ -387,7 +397,7 @@ class Sith {
 }
 
 
-class Sith$SithInteractionVisitor {
+class SithInteractionVisitor {
 }
 abstract class MovableEntity {
 	+ {abstract}getMoveInterval(): int
@@ -412,7 +422,7 @@ class Luke {
 }
 
 
-class Luke$LukeInteractionVisitor {
+class LukeInteractionVisitor {
 }
 abstract class SpriteRegister {
 }
@@ -489,7 +499,7 @@ class GameWindow {
 }
 
 
-class GameWindow$InstanceHolder {
+class GameInstanceHolder {
 }
 
 class Vader {
@@ -498,7 +508,7 @@ class Vader {
 }
 
 
-class Vader$VaderInteractionVisitor {
+class VaderInteractionVisitor {
 	+ visit(luke: Luke): void
 }
 
@@ -571,36 +581,36 @@ class AnimatedSprite {
 
 PlayerVisitor <|-- PlayerInvincibleVisitor
 Cell <|-- GroundCell
-StormTrooper +-- StormTrooper$StormTrooperInteractionVisitor
-GhostInteractionVisitor <|-- StormTrooper$StormTrooperInteractionVisitor
+StormTrooper +-- StormStormTrooperInteractionVisitor
+GhostInteractionVisitor <|-- StormStormTrooperInteractionVisitor
 PlayerVisitor <|-- PlayerDeadVisitor
 Pellet <|-- SuperPellet
 PlayerVisitor <|-- PlayerNormalVisitor
-Level +-- Level$EntityTask
-Runnable <|.. Level$EntityTask
-Level +-- Level$LevelObserver
+Level +-- EntityTask
+Runnable <|.. EntityTask
+Level +-- LevelObserver
 Interactor <|.. Ghost
 MovableEntity <|-- Ghost
-Ghost +-- Ghost$GhostInteractionVisitor
-AbstractInteractionVisitor <|-- Ghost$GhostInteractionVisitor
+Ghost +-- GhostInteractionVisitor
+AbstractInteractionVisitor <|-- GhostInteractionVisitor
 Entity <|-- SpeechBubble
-SpeechBubble +-- SpeechBubble$SpeechBubbleSprite
-Sprite <|.. SpeechBubble$SpeechBubbleSprite
-Pathfinding +-- Pathfinding$Node
+SpeechBubble +-- SpeechSpeechBubbleSprite
+Sprite <|.. SpeechSpeechBubbleSprite
+Pathfinding +-- Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
 Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
 JFrame <|-- GameFrame
-GameFrame +-- GameFrame$KeyListener
-KeyAdapter <|-- GameFrame$KeyListener
-Sith +-- Sith$SithInteractionVisitor
-GhostInteractionVisitor <|-- Sith$SithInteractionVisitor
+GameFrame +-- GameKeyListener
+KeyAdapter <|-- GameKeyListener
+Sith +-- SithInteractionVisitor
+GhostInteractionVisitor <|-- SithInteractionVisitor
 Entity <|-- MovableEntity
 InteractionVisitor <|.. AbstractInteractionVisitor
-Luke +-- Luke$LukeInteractionVisitor
-GhostInteractionVisitor <|-- Luke$LukeInteractionVisitor
+Luke +-- LukeInteractionVisitor
+GhostInteractionVisitor <|-- LukeInteractionVisitor
 JPanel <|-- ButtonPanel
 Interactor <|.. Player
 MovableEntity <|-- Player
@@ -608,9 +618,9 @@ AbstractInteractionVisitor <|-- PlayerVisitor
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
-GameWindow +-- GameWindow$InstanceHolder
-Vader +-- Vader$VaderInteractionVisitor
-GhostInteractionVisitor <|-- Vader$VaderInteractionVisitor
+GameWindow +-- GameInstanceHolder
+Vader +-- VaderInteractionVisitor
+GhostInteractionVisitor <|-- VaderInteractionVisitor
 Interactable <|.. Entity
 SpriteRegister <|-- PacmanSprites
 Sprite <|.. AnimatedSprite
