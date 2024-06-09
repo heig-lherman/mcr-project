@@ -28,14 +28,4 @@ public class DefaultSprite implements Sprite {
     public int getHeight() {
         return 0;
     }
-
-    @Override
-    public void startBlinking() {
-
-    }
-
-    @Override
-    public void stopBlinking() {
-
-    }
 }

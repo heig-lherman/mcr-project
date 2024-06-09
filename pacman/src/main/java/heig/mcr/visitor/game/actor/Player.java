@@ -10,9 +10,12 @@ import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.util.Map;
 
 public class Player extends MovableEntity implements Interactor {
+
+    private static final int DEFAULT_INTERVAL = 300;
 
     private final InteractionVisitor normalHandler = new NormalInteractionHandler();
     private final InteractionVisitor superHandler = new SuperInteractionHandler();
@@ -20,7 +23,7 @@ public class Player extends MovableEntity implements Interactor {
 
     private Map<Direction, AnimatedSprite> directedSprites;
     private final AnimatedSprite deathSprites;
-    private final int DEFAULT_INTERVAL = 300;
+
     private Direction requestedDirection = Direction.UP;
     private boolean alive = true;
     private int moveInterval = DEFAULT_INTERVAL;

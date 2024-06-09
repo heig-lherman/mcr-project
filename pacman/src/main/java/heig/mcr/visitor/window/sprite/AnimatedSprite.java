@@ -1,27 +1,28 @@
 package heig.mcr.visitor.window.sprite;
 
 import heig.mcr.visitor.math.RegionOfInterest;
+
 import java.awt.*;
 
 public class AnimatedSprite implements Sprite {
     private static final Sprite ANIMATION_END = new DefaultSprite();
-    private static final int DEFAULT_BLINK_DELAY = 20;
+    private static final int DEFAULT_BLINK_DELAY = 80;
 
+    private boolean visible = true;
     private final Sprite[] frames;
     private final int delay;
 
-    private int currentFrame;
+    private int currentFrame = 0;
     private boolean looping;
     private boolean animating;
-    private long lastUpdate;
 
     // Variables for blinking
     private boolean blinking;
     private int blinkDelay;
-    private long lastBlink;
-    private boolean visible = true;
 
-    // Constructor with blink delay specified
+    private long lastUpdate = System.currentTimeMillis();
+    private long lastBlink = System.currentTimeMillis();
+
     private AnimatedSprite(Sprite[] frames, int delay, boolean looping, boolean animating, int blinkDelay) {
         this.frames = frames;
         this.delay = delay;
@@ -56,23 +57,21 @@ public class AnimatedSprite implements Sprite {
         animating = false;
     }
 
-
-    @Override
     public void startBlinking() {
         blinking = true;
         lastBlink = System.currentTimeMillis();
     }
 
-    @Override
     public void stopBlinking() {
         blinking = false;
         visible = true;
     }
 
     private void updateBlinking() {
-        if (blinking && System.currentTimeMillis() - lastBlink > blinkDelay) {
+        long now = System.currentTimeMillis();
+        if (blinking && now - lastBlink > blinkDelay) {
             visible = !visible;
-            lastBlink = System.currentTimeMillis();
+            lastBlink = now;
         }
     }
 
@@ -93,9 +92,17 @@ public class AnimatedSprite implements Sprite {
     public void draw(Graphics graphics, int x, int y, int width, int height) {
         updateAnimation();
         updateBlinking();
-        if (visible) {
-            getCurrentFrame().draw(graphics, x, y, width, height);
+        if (!visible) {
+            return;
         }
+
+        getCurrentFrame().draw(
+                graphics,
+                x - width / 2,
+                y - height / 2,
+                width * 2,
+                height * 2
+        );
     }
 
     @Override

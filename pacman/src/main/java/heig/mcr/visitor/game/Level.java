@@ -6,6 +6,7 @@ import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
+
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +30,6 @@ public class Level {
     private int edibleDuration = 10000;
     private long edibleEndTime;
 
-
     public Level(Board board, Collection<Ghost> ghosts, List<Player> players) {
         this.board = board;
         this.players.addAll(players);
@@ -41,6 +41,7 @@ public class Level {
         for (var player : players) {
             entityThreads.put(player, Executors.newSingleThreadScheduledExecutor());
         }
+
         superPelletCount = countRemainingSuperPellets();
     }
 

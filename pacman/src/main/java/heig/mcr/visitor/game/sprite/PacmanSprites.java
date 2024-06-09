@@ -11,7 +11,6 @@ import java.util.Map;
 
 public final class PacmanSprites extends SpriteRegister {
 
-    private static final int SPRITE_SIZE = 16;
     private static final int ANIMATION_DELAY = 100;
     private static final Direction[] DIRECTED_ORDER = {
             Direction.DOWN,
@@ -90,8 +89,6 @@ public final class PacmanSprites extends SpriteRegister {
         return loadDirectedSprites("/sprites/bobafett_weak.png", 3, 29, 23);
     }
 
-
-
     private Map<Direction, AnimatedSprite> loadDirectedSprites(String resource, int frames, int spriteWidth, int spriteHeight) {
         Map<Direction, AnimatedSprite> sprites = new EnumMap<>(Direction.class);
         Sprite base = loadSprite(resource);
@@ -115,7 +112,6 @@ public final class PacmanSprites extends SpriteRegister {
 
         return sprites;
     }
-
 
     public static PacmanSprites getInstance() {
         return INSTANCE;

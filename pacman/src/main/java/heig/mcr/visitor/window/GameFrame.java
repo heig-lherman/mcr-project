@@ -26,6 +26,7 @@ public class GameFrame extends JFrame {
     ) {
         super("Pacman");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         KeyListener keys = new KeyListener(keybindings);
         addKeyListener(keys);
@@ -44,7 +45,6 @@ public class GameFrame extends JFrame {
 
     public void start() {
         setVisible(true);
-
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(panel::repaint, 0, 1000 / FRAME_RATE, TimeUnit.MILLISECONDS);
     }

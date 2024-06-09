@@ -5,9 +5,12 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
+
 import java.util.Map;
 
 public class Luke extends Ghost {
+
+    private static final Map<Direction, AnimatedSprite> SPRITES = PacmanSprites.getInstance().getLuke();
 
     public Luke() {
         super();
@@ -25,12 +28,12 @@ public class Luke extends Ghost {
 
     @Override
     Map<Direction, AnimatedSprite> getEdibleSprites() {
-        return null;
+        return SPRITES;
     }
 
     @Override
     Map<Direction, AnimatedSprite> getInvincibleSprites() {
-        return PacmanSprites.getInstance().getLuke();
+        return SPRITES;
     }
 
     @Override

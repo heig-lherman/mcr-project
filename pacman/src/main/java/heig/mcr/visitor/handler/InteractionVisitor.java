@@ -11,6 +11,7 @@ public interface InteractionVisitor {
 
     // Pellets
     void interactWith(Pellet pellet);
+
     void interactWith(SuperPellet pellet);
 
     // Ghosts
@@ -23,5 +24,4 @@ public interface InteractionVisitor {
     void interactWith(StormTrooper stormTrooper);
 
     void interactWith(BobaFett bobaFett);
-
 }

@@ -10,13 +10,14 @@ import heig.mcr.visitor.math.Pathfinding;
 import heig.mcr.visitor.math.RandomGenerator;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.util.List;
 import java.util.Map;
 
 public abstract class Ghost extends MovableEntity implements Interactor {
 
     private GhostState state;
-    private Map<Direction, ? extends Sprite> directedSprites;
+    private Map<Direction, AnimatedSprite> directedSprites;
     private List<Direction> pathToPlayer;
     private int pathIndex;
     private int moveCounter = 0;
@@ -70,14 +71,10 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     private void changeSprite() {
         if (isEdible()) {
             directedSprites = getEdibleSprites();
-            for (Direction direction : directedSprites.keySet()) {
-                directedSprites.get(direction).startBlinking();
-            }
+            directedSprites.values().forEach(AnimatedSprite::startBlinking);
         } else {
             directedSprites = getInvincibleSprites();
-            for (Direction direction : directedSprites.keySet()) {
-                directedSprites.get(direction).stopBlinking();
-            }
+            directedSprites.values().forEach(AnimatedSprite::stopBlinking);
         }
     }
 

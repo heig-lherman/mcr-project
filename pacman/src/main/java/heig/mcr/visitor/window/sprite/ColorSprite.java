@@ -32,14 +32,4 @@ public class ColorSprite implements Sprite {
     public int getHeight() {
         return 16;
     }
-
-    @Override
-    public void startBlinking() {
-
-    }
-
-    @Override
-    public void stopBlinking() {
-
-    }
 }
