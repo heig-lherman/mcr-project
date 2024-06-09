@@ -23,12 +23,22 @@ public class AnimatedSprite implements Sprite {
     private long lastUpdate = System.currentTimeMillis();
     private long lastBlink = System.currentTimeMillis();
 
-    private AnimatedSprite(Sprite[] frames, int delay, boolean looping, boolean animating, int blinkDelay) {
+    private AnimatedSprite(
+            Sprite[] frames,
+            int delay,
+            boolean looping,
+            boolean animating,
+            boolean blinking,
+            int blinkDelay
+    ) {
         this.frames = frames;
+
         this.delay = delay;
+        this.blinkDelay = blinkDelay;
+
         this.looping = looping;
         this.animating = animating;
-        this.blinkDelay = blinkDelay;
+        this.blinking = blinking;
 
         this.currentFrame = 0;
         this.lastUpdate = System.currentTimeMillis();
@@ -40,7 +50,11 @@ public class AnimatedSprite implements Sprite {
     }
 
     public AnimatedSprite(Sprite[] frames, int delay, boolean looping, boolean animating) {
-        this(frames, delay, looping, animating, DEFAULT_BLINK_DELAY);
+        this(frames, delay, looping, animating, false);
+    }
+
+    public AnimatedSprite(Sprite[] frames, int delay, boolean looping, boolean animating, boolean blinking) {
+        this(frames, delay, looping, animating, blinking, DEFAULT_BLINK_DELAY);
     }
 
     public void restart() {
@@ -59,7 +73,7 @@ public class AnimatedSprite implements Sprite {
 
     public void startBlinking() {
         blinking = true;
-        lastBlink = System.currentTimeMillis();
+        lastBlink = 0;
     }
 
     public void stopBlinking() {

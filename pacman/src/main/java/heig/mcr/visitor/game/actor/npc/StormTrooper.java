@@ -1,5 +1,6 @@
 package heig.mcr.visitor.game.actor.npc;
 
+import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
@@ -8,15 +9,25 @@ import heig.mcr.visitor.window.sprite.AnimatedSprite;
 
 import java.util.Map;
 
-public class StormTrooper extends Ghost{
+public class StormTrooper extends Ghost {
 
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleStormTrooper();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getStormTrooper();
 
-    public StormTrooper() {
-        super();
-        this.name = "Storm Trooper";
-        this.pathUpdateInterval = 12;
+    private final InteractionVisitor handler = new StormTrooperInteractionHandler();
+
+    public StormTrooper(Cell initialCell) {
+        super(initialCell, 12);
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getEdibleSprites() {
+        return EDIBLE_SPRITES;
+    }
+
+    @Override
+    Map<Direction, AnimatedSprite> getInvincibleSprites() {
+        return INVINCIBLE_SPRITES;
     }
 
     @Override
@@ -25,15 +36,15 @@ public class StormTrooper extends Ghost{
     }
 
     @Override
-    public void interactWith(Interactable other) { }
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
+    }
 
-    @Override
-    Map<Direction, AnimatedSprite> getEdibleSprites() {
-            return EDIBLE_SPRITES;
+    private class StormTrooperInteractionHandler extends GhostInteractionHandler {
     }
 
     @Override
-    Map<Direction, AnimatedSprite> getInvincibleSprites() {
-        return INVINCIBLE_SPRITES;
+    public String toString() {
+        return "Storm Trooper";
     }
 }

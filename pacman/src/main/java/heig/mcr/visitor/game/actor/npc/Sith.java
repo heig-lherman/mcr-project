@@ -1,5 +1,6 @@
 package heig.mcr.visitor.game.actor.npc;
 
+import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
@@ -13,19 +14,11 @@ public class Sith extends Ghost {
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleSith();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getSith();
 
-    public Sith() {
-        super();
-        this.name = "Sith";
-        this.pathUpdateInterval = 8;
-    }
+    private final InteractionVisitor handler = new SithInteractionHandler();
 
-    @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public Sith(Cell initialCell) {
+        super(initialCell, 8);
     }
-
-    @Override
-    public void interactWith(Interactable other) { }
 
     @Override
     Map<Direction, AnimatedSprite> getEdibleSprites() {
@@ -35,5 +28,23 @@ public class Sith extends Ghost {
     @Override
     Map<Direction, AnimatedSprite> getInvincibleSprites() {
         return INVINCIBLE_SPRITES;
+    }
+
+    @Override
+    public void acceptInteraction(InteractionVisitor v) {
+        v.interactWith(this);
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
+    }
+
+    private class SithInteractionHandler extends GhostInteractionHandler {
+    }
+
+    @Override
+    public String toString() {
+        return "Sith";
     }
 }

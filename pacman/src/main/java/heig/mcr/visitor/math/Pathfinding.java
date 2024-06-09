@@ -2,6 +2,7 @@ package heig.mcr.visitor.math;
 
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
+
 import java.util.*;
 
 public final class Pathfinding {
@@ -52,7 +53,7 @@ public final class Pathfinding {
      * @param target The target cell
      * @return The list of directions to follow to reach the target cell, or an empty list if no path was found
      */
-    public static List<Direction> findShortestPath(Cell start, Cell target) {
+    public static List<Direction> findShortestPath(Cell start, Cell target, Entity entity) {
         if (start.equals(target)) {
             return Collections.emptyList();
         }
@@ -73,7 +74,7 @@ public final class Pathfinding {
 
             for (Direction direction : Direction.values()) {
                 Cell neighbor = cell.getNeighbor(direction);
-                if (Objects.nonNull(neighbor) && !visited.contains(neighbor) && neighbor.isWalkable()) {
+                if (Objects.nonNull(neighbor) && !visited.contains(neighbor) && neighbor.isWalkableBy(entity)) {
                     queue.add(new Node(direction, neighbor, current));
                     visited.add(neighbor);
                 }

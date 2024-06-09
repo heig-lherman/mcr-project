@@ -1,5 +1,6 @@
 package heig.mcr.visitor.game.actor.npc;
 
+import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
@@ -15,10 +16,8 @@ public class BobaFett extends Ghost {
 
     private int moveInterval = 300; // starts faster than the others
 
-    public BobaFett() {
-        super();
-        this.name = "Boba Fett";
-        this.pathUpdateInterval = 8;
+    public BobaFett(Cell initialCell) {
+        super(initialCell, 8);
     }
 
     @Override
@@ -49,5 +48,11 @@ public class BobaFett extends Ghost {
 
     @Override
     public void interactWith(Interactable other) {
+        // Boba Fett does not interact with other NPCs
+    }
+
+    @Override
+    public String toString() {
+        return "Boba Fett";
     }
 }

@@ -3,7 +3,6 @@ package heig.mcr.visitor.game;
 import heig.mcr.visitor.board.*;
 import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
-import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
 
@@ -23,12 +22,7 @@ public class Level {
     private final List<Player> players = new LinkedList<>();
     private final List<LevelObserver> observers = new LinkedList<>();
 
-    private long superPelletCount;
-
     private boolean running = false;
-
-    private int edibleDuration = 10000;
-    private long edibleEndTime;
 
     public Level(Board board, Collection<Ghost> ghosts, List<Player> players) {
         this.board = board;
@@ -41,8 +35,6 @@ public class Level {
         for (var player : players) {
             entityThreads.put(player, Executors.newSingleThreadScheduledExecutor());
         }
-
-        superPelletCount = countRemainingSuperPellets();
     }
 
     public Board getBoard() {
@@ -57,7 +49,7 @@ public class Level {
         return running;
     }
 
-    public void move(Entity entity, Direction direction) {
+    public void move(MovableEntity entity, Direction direction) {
         synchronized (moveLock) {
             if (!running) {
                 return;
@@ -68,13 +60,16 @@ public class Level {
             Cell location = entity.getCell();
             Cell destination = location.getNeighbor(direction);
 
-            if (destination.isWalkable()) {
+            if (destination.isWalkableBy(entity)) {
                 Collection<Entity> occupants = destination.getOccupants();
                 entity.setCell(destination);
 
                 if ((entity instanceof Interactor i)) {
                     for (Entity occupant : occupants) {
                         i.interactWith(occupant);
+                        if (occupant instanceof Interactor oi) {
+                            oi.interactWith(entity);
+                        }
                     }
                 }
             }
@@ -131,25 +126,6 @@ public class Level {
         } else if (countRemainingPellets() == 0) {
             observers.forEach(LevelObserver::onLevelWon);
         }
-        if (countRemainingSuperPellets() < superPelletCount) {
-            superPelletCount = countRemainingSuperPellets();
-            for (var ghost : entityThreads.keySet()) {
-                if (ghost instanceof Ghost g) {
-                    g.becomeEdible();
-                    edibleEndTime = System.currentTimeMillis() + edibleDuration;
-                }
-            }
-            players.forEach(Player::becomeSuper);
-        }
-        if (edibleEndTime != 0 && System.currentTimeMillis() > edibleEndTime) {
-            for (var ghost : entityThreads.keySet()) {
-                if (ghost instanceof Ghost g) {
-                    g.becomeInvincible();
-                }
-            }
-            players.forEach(Player::leaveSuper);
-            edibleEndTime = 0;
-        }
     }
 
     public void addObserver(LevelObserver observer) {
@@ -164,6 +140,17 @@ public class Level {
         return players.stream().anyMatch(Player::isAlive);
     }
 
+    public boolean hasScaryPlayer() {
+        return players.stream().anyMatch(Player::isScary);
+    }
+
+    public void toggleBlinking() {
+        entityThreads.keySet().stream()
+                .filter(Ghost.class::isInstance)
+                .map(Ghost.class::cast)
+                .forEach(Ghost::toggleBlinking);
+    }
+
     public long countRemainingPellets() {
         return board.streamCells()
                 .flatMap(cell -> cell.getOccupants().stream())
@@ -171,15 +158,9 @@ public class Level {
                 .count();
     }
 
-    public long countRemainingSuperPellets() {
-        return board.streamCells()
-                .flatMap(cell -> cell.getOccupants().stream())
-                .filter(SuperPellet.class::isInstance)
-                .count();
-    }
-
     private class EntityTask implements Runnable {
         private final MovableEntity entity;
+
         public EntityTask(MovableEntity entity) {
             this.entity = entity;
         }
@@ -196,7 +177,10 @@ public class Level {
     }
 
     public interface LevelObserver {
-        void onLevelWon();
-        void onLevelLost();
+        default void onLevelWon() {
+        }
+
+        default void onLevelLost() {
+        }
     }
 }

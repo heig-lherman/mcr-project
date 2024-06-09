@@ -1,81 +1,62 @@
 package heig.mcr.visitor.game.actor.npc;
 
+import heig.mcr.visitor.GameWindow;
+import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactor;
 import heig.mcr.visitor.board.MovableEntity;
 import heig.mcr.visitor.game.actor.Player;
-import heig.mcr.visitor.game.actor.state.GhostState;
-import heig.mcr.visitor.game.actor.state.InvincibleState;
+import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.math.Pathfinding;
 import heig.mcr.visitor.math.RandomGenerator;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public abstract class Ghost extends MovableEntity implements Interactor {
 
-    private GhostState state;
-    private Map<Direction, AnimatedSprite> directedSprites;
-    private List<Direction> pathToPlayer;
-    private int pathIndex;
+    private List<Direction> pathToPlayer = Collections.emptyList();
+    private int pathIndex = 0;
     private int moveCounter = 0;
-    protected int pathUpdateInterval = 10;
-    private int moveInterval = 500;
 
-    protected Ghost() {
-        this.directedSprites = getInvincibleSprites();
-        this.state = new InvincibleState(this);
-        this.pathToPlayer = List.of();
-        this.pathIndex = 0;
-        this.moveInterval -= RandomGenerator.getInstance().nextInt(150);
+    private boolean blinking = false;
+
+    private final int pathUpdateInterval;
+
+    protected Ghost(Cell initialCell, int pathUpdateInterval) {
+        super(initialCell);
+        this.pathUpdateInterval = pathUpdateInterval;
     }
 
-    @Override
-    public int getLayer() {
-        return 10;
-    }
+    abstract Map<Direction, AnimatedSprite> getEdibleSprites();
+    abstract Map<Direction, AnimatedSprite> getInvincibleSprites();
 
     @Override
     public Sprite getSprite() {
-        return directedSprites.get(getDirection());
+        boolean hasScaryPlayer = GameWindow.getInstance().getActiveLevel().hasScaryPlayer();
+        if (hasScaryPlayer) {
+            return getEdibleSprites().get(getDirection());
+        } else {
+            return getInvincibleSprites().get(getDirection());
+        }
+    }
+
+    public void toggleBlinking() {
+        if (blinking) {
+            getEdibleSprites().values().forEach(AnimatedSprite::stopBlinking);
+        } else {
+            getEdibleSprites().values().forEach(AnimatedSprite::startBlinking);
+        }
+
+        blinking = !blinking;
     }
 
     @Override
     public int getMoveInterval() {
-        return moveInterval;
-    }
-
-    public void setState(GhostState state) {
-        this.state = state;
-        changeSprite();
-    }
-
-    public boolean isEdible() {
-        return state.isEdible();
-    }
-
-    public void becomeEdible() {
-        state.becomeEdible();
-    }
-
-    public void becomeInvincible() {
-        state.becomeInvincible();
-    }
-
-    abstract Map<Direction, AnimatedSprite> getEdibleSprites();
-
-    abstract Map<Direction, AnimatedSprite> getInvincibleSprites();
-
-    private void changeSprite() {
-        if (isEdible()) {
-            directedSprites = getEdibleSprites();
-            directedSprites.values().forEach(AnimatedSprite::startBlinking);
-        } else {
-            directedSprites = getInvincibleSprites();
-            directedSprites.values().forEach(AnimatedSprite::stopBlinking);
-        }
+        return RandomGenerator.getInstance().nextInt(350, 500);
     }
 
     @Override
@@ -98,10 +79,25 @@ public abstract class Ghost extends MovableEntity implements Interactor {
     private void updatePathToPlayer() {
         Player player = Pathfinding.findNearestEntity(Player.class, this.getCell());
         if (player != null) {
-            pathToPlayer = Pathfinding.findShortestPath(this.getCell(), player.getCell());
+            pathToPlayer = Pathfinding.findShortestPath(this.getCell(), player.getCell(), this);
             pathIndex = 0;
         } else {
             pathToPlayer = List.of();
+        }
+    }
+
+    @Override
+    public int getLayer() {
+        return 10;
+    }
+
+    protected class GhostInteractionHandler extends AbstractInteractionVisitor {
+        @Override
+        public void interactWith(Player player) {
+            if (!player.isScary()) {
+                System.out.printf("Player killed by %s%n", Ghost.this);
+                player.kill();
+            }
         }
     }
 }

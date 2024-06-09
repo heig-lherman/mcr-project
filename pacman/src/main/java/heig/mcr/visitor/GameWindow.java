@@ -13,11 +13,23 @@ import java.util.Map;
 
 public class GameWindow implements Level.LevelObserver {
 
+    private static final class InstanceHolder {
+        private static final GameWindow INSTANCE;
+
+        static {
+            try {
+                INSTANCE = new GameWindow();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private final Player player;
     private final Level level;
     private final GameFrame frame;
 
-    public GameWindow() throws IOException {
+    private GameWindow() throws IOException {
         this.level = MapParser.parse("/levels/default.txt");
         this.level.addObserver(this);
         this.player = level.getPlayer(0);
@@ -36,6 +48,10 @@ public class GameWindow implements Level.LevelObserver {
         frame.start();
     }
 
+    public Level getActiveLevel() {
+        return level;
+    }
+
     @Override
     public void onLevelWon() {
         level.stop();
@@ -46,5 +62,9 @@ public class GameWindow implements Level.LevelObserver {
     public void onLevelLost() {
         level.stop();
         JOptionPane.showMessageDialog(frame, "You lost!");
+    }
+
+    public static GameWindow getInstance() {
+        return InstanceHolder.INSTANCE;
     }
 }

@@ -7,11 +7,13 @@ import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.Ghost;
+import heig.mcr.visitor.game.board.DoorCell;
 import heig.mcr.visitor.game.board.GroundCell;
 import heig.mcr.visitor.game.board.WallCell;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 public class LevelBuilder {
 
@@ -41,12 +43,16 @@ public class LevelBuilder {
         return this;
     }
 
+    public LevelBuilder addDoor(int x, int y) {
+        cells[x][y] = new DoorCell();
+        return this;
+    }
+
     public LevelBuilder addPellet(int x, int y) {
         Cell cell = new GroundCell();
         cells[x][y] = cell;
 
-        Pellet pellet = new Pellet();
-        pellet.setCell(cell);
+        new Pellet(cell);
         return this;
     }
 
@@ -54,17 +60,15 @@ public class LevelBuilder {
         Cell cell = new GroundCell();
         cells[x][y] = cell;
 
-        SuperPellet superPellet = new SuperPellet();
-        superPellet.setCell(cell);
+        new SuperPellet(cell);
         return this;
     }
 
-    public LevelBuilder addGhost(int x, int y, Ghost ghost) {
+    public LevelBuilder addGhost(int x, int y, Function<Cell, Ghost> ghostFactory) {
         Cell cell = new GroundCell();
         cells[x][y] = cell;
 
-        ghost.setCell(cell);
-        ghosts.add(ghost);
+        ghosts.add(ghostFactory.apply(cell));
         return this;
     }
 
@@ -72,10 +76,7 @@ public class LevelBuilder {
         Cell cell = new GroundCell();
         cells[x][y] = cell;
 
-        Player player = new Player();
-
-        player.setCell(cell);
-        players.add(player);
+        players.add(new Player(cell));
         return this;
     }
 

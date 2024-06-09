@@ -32,7 +32,7 @@ public abstract class Cell {
         occupants.remove(entity);
     }
 
-    public abstract boolean isWalkable();
+    public abstract boolean isWalkableBy(Entity entity);
 
     public abstract Sprite getSprite();
 }

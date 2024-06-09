@@ -44,19 +44,19 @@ public final class MapParser {
                         builder.addPlayer(x, y);
                         break;
                     case 'V':
-                        builder.addGhost(x, y, new Vader());
+                        builder.addGhost(x, y, Vader::new);
                         break;
                     case 'S':
-                        builder.addGhost(x, y, new Sith());
+                        builder.addGhost(x, y, Sith::new);
                         break;
                     case 'L':
-                        builder.addGhost(x, y, new Luke());
+                        builder.addGhost(x, y, Luke::new);
                         break;
                     case 'T':
-                        builder.addGhost(x, y, new StormTrooper());
+                        builder.addGhost(x, y, StormTrooper::new);
                         break;
                     case 'B':
-                        builder.addGhost(x, y, new BobaFett());
+                        builder.addGhost(x, y, BobaFett::new);
                         break;
                     case '|':
                         builder.addWall(x, y);
@@ -67,7 +67,11 @@ public final class MapParser {
                     case '+':
                         builder.addSuperPellet(x, y);
                         break;
+                    case '~':
+                        builder.addDoor(x, y);
+                        break;
                     case ' ':
+                    case '-':
                     default:
                         builder.addGround(x, y);
                         break;

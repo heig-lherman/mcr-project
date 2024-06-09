@@ -1,5 +1,6 @@
 package heig.mcr.visitor.game.actor.npc;
 
+import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
@@ -12,19 +13,11 @@ public class Luke extends Ghost {
 
     private static final Map<Direction, AnimatedSprite> SPRITES = PacmanSprites.getInstance().getLuke();
 
-    public Luke() {
-        super();
-        this.name = "Luke";
-        this.pathUpdateInterval =4;
-    }
+    private final InteractionVisitor handler = new LukeInteractionHandler();
 
-    @Override
-    public void acceptInteraction(InteractionVisitor v) {
-        v.interactWith(this);
+    public Luke(Cell initialCell) {
+        super(initialCell, 4);
     }
-
-    @Override
-    public void interactWith(Interactable other) { }
 
     @Override
     Map<Direction, AnimatedSprite> getEdibleSprites() {
@@ -37,5 +30,20 @@ public class Luke extends Ghost {
     }
 
     @Override
-    public void becomeEdible() { }
+    public void acceptInteraction(InteractionVisitor v) {
+        v.interactWith(this);
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
+    }
+
+    private class LukeInteractionHandler extends GhostInteractionHandler {
+    }
+
+    @Override
+    public String toString() {
+        return "Luke";
+    }
 }
