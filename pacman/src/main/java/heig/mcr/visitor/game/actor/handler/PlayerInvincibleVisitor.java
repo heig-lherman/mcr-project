@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerInvincibleState extends PlayerState {
+public class PlayerInvincibleVisitor extends PlayerVisitor {
 
     private static final int INVINCIBLE_DURATION = 10;
     private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(2);
@@ -17,7 +17,7 @@ public class PlayerInvincibleState extends PlayerState {
     private ScheduledFuture<?> endFuture;
     private ScheduledFuture<?> blinkFuture;
 
-    public PlayerInvincibleState(Player player) {
+    public PlayerInvincibleVisitor(Player player) {
         super(player);
         startTimer();
     }
@@ -61,7 +61,7 @@ public class PlayerInvincibleState extends PlayerState {
     }
 
     public void endInvincibility() {
-        getPlayer().setState(new PlayerNormalState(getPlayer()));
+        getPlayer().setState(new PlayerNormalVisitor(getPlayer()));
         GameWindow.getInstance().getActiveLevel().toggleBlinking();
     }
 
@@ -77,7 +77,7 @@ public class PlayerInvincibleState extends PlayerState {
     public void visit(Luke luke) {
         System.out.printf("%s killed by %s while trying to eat him%n", getPlayer(), luke);
         // Special kill case since Luke cannot be eaten
-        getPlayer().setState(new PlayerDeadState(getPlayer()));
+        getPlayer().setState(new PlayerDeadVisitor(getPlayer()));
     }
 
     @Override

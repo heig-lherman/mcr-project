@@ -3,9 +3,9 @@ package heig.mcr.visitor.game.actor.handler;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.BobaFett;
 
-public class PlayerNormalState extends PlayerState {
+public class PlayerNormalVisitor extends PlayerVisitor {
 
-    public PlayerNormalState(Player player) {
+    public PlayerNormalVisitor(Player player) {
         super(player);
     }
 
@@ -21,12 +21,12 @@ public class PlayerNormalState extends PlayerState {
 
     @Override
     public void eatSuperPellet() {
-        getPlayer().setState(new PlayerInvincibleState(getPlayer()));
+        getPlayer().setState(new PlayerInvincibleVisitor(getPlayer()));
     }
 
     @Override
     public void kill() {
-        getPlayer().setState(new PlayerDeadState(getPlayer()));
+        getPlayer().setState(new PlayerDeadVisitor(getPlayer()));
     }
 
     // Interactions

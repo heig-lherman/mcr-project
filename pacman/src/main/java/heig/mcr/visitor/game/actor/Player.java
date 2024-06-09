@@ -4,8 +4,8 @@ import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
 import heig.mcr.visitor.board.Interactor;
 import heig.mcr.visitor.board.MovableEntity;
-import heig.mcr.visitor.game.actor.handler.PlayerNormalState;
-import heig.mcr.visitor.game.actor.handler.PlayerState;
+import heig.mcr.visitor.game.actor.handler.PlayerNormalVisitor;
+import heig.mcr.visitor.game.actor.handler.PlayerVisitor;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
@@ -14,7 +14,7 @@ public class Player extends MovableEntity implements Interactor {
 
     private static final int DEFAULT_INTERVAL = 300;
 
-    private PlayerState state = new PlayerNormalState(this);
+    private PlayerVisitor state = new PlayerNormalVisitor(this);
     private Direction requestedDirection = Direction.UP;
 
     private int moveInterval = DEFAULT_INTERVAL;
@@ -36,7 +36,7 @@ public class Player extends MovableEntity implements Interactor {
         return state.getSprite();
     }
 
-    public void setState(PlayerState state) {
+    public void setState(PlayerVisitor state) {
         System.out.println("Player state: " + state.getClass().getSimpleName());
         this.state.dispose();
         this.state = state;

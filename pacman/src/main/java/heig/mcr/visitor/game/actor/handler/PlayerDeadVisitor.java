@@ -5,11 +5,11 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 
-public class PlayerDeadState extends PlayerState {
+public class PlayerDeadVisitor extends PlayerVisitor {
 
     private final AnimatedSprite deathSprites = PacmanSprites.getInstance().getPacmanDeath();
 
-    protected PlayerDeadState(Player player) {
+    protected PlayerDeadVisitor(Player player) {
         super(player);
         deathSprites.restart();
     }

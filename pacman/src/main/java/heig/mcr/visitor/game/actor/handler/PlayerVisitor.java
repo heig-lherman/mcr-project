@@ -11,13 +11,13 @@ import heig.mcr.visitor.window.sprite.Sprite;
 
 import java.util.Map;
 
-public abstract class PlayerState extends AbstractInteractionVisitor {
+public abstract class PlayerVisitor extends AbstractInteractionVisitor {
 
     private final Player player;
 
     private Map<Direction, AnimatedSprite> sprites = PacmanSprites.getInstance().getPacman();
 
-    protected PlayerState(Player player) {
+    protected PlayerVisitor(Player player) {
         this.player = player;
     }
 
