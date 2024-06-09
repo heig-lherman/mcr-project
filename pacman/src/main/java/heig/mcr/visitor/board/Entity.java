@@ -1,5 +1,6 @@
 package heig.mcr.visitor.board;
 
+import heig.mcr.visitor.game.actor.SpeechBubble;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
 
@@ -8,10 +9,14 @@ import heig.mcr.visitor.window.sprite.Sprite;
  */
 public abstract class Entity implements Interactable {
 
+    private static final int SPEECH_DEBOUNCE = 10000;
+
     private Cell cell;
     private Direction direction = Direction.UP;
+    private long lastSpeech = 0;
 
     private final Cell initialCell;
+
 
     protected Entity(Cell initialCell) {
         this.initialCell = initialCell;
@@ -49,6 +54,14 @@ public abstract class Entity implements Interactable {
         if (cell != null) {
             cell.removeOccupant(this);
             cell = null;
+        }
+    }
+
+    public void spawnSpeech(String text) {
+        long now = System.currentTimeMillis();
+        if (now - lastSpeech > SPEECH_DEBOUNCE) {
+            new SpeechBubble(cell.getNeighbor(Direction.UP), text);
+            lastSpeech = now;
         }
     }
 

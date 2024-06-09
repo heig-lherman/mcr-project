@@ -69,7 +69,7 @@ public class PlayerInvincibleVisitor extends PlayerVisitor {
     @Override
     public void visit(Vader vader) {
         System.out.printf("%s is eaten by %s%n", vader, getPlayer());
-        vader.setCell(vader.getInitialCell());
+        vader.sendHome();
         setRedSprites();
     }
 
@@ -83,7 +83,7 @@ public class PlayerInvincibleVisitor extends PlayerVisitor {
     @Override
     public void visit(Sith sith) {
         System.out.printf("%s is eaten by %s%n", sith, getPlayer());
-        sith.setCell(sith.getInitialCell());
+        sith.sendHome();
     }
 
     @Override
@@ -96,7 +96,7 @@ public class PlayerInvincibleVisitor extends PlayerVisitor {
     public void visit(BobaFett bobaFett) {
         System.out.printf("%s is eaten by %s%n", bobaFett, getPlayer());
         System.out.printf("%s is moving a bit faster after eating %s%n", getPlayer(), bobaFett);
-        bobaFett.setCell(bobaFett.getInitialCell());
-        getPlayer().setMoveInterval(Math.min(50, bobaFett.getMoveInterval() - 100));
+        getPlayer().setMoveInterval(Math.max(50, bobaFett.getMoveInterval() - 20));
+        bobaFett.sendHome();
     }
 }

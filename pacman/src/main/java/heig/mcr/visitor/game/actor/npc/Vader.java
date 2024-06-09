@@ -41,6 +41,11 @@ public class Vader extends Ghost {
     }
 
     private class VaderInteractionVisitor extends GhostInteractionVisitor {
+
+        @Override
+        public void visit(Luke luke) {
+            spawnSpeech("I am your father.");
+        }
     }
 
     @Override
