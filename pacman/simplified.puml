@@ -7,6 +7,8 @@
 ' Style
 hide empty members
 skinparam classAttributeIconSize 0
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontSize 20
 
 ' Hide some elements for the simplified diagram - comment this to get the full
 remove Level$EntityTask
@@ -28,8 +30,9 @@ remove MapParser
 remove Runnable
 remove *Frame*
 remove Pathfinding*
+remove SpeechBubble*
 
-' Additions
+' Links restructuration to remove all intermediate abstract classes and move all links up to top level interfaces
 remove Main
 
 '# Default implementations not related to the patterns, remove patterns are grouped with new links
@@ -44,25 +47,43 @@ InteractionVisitor <|.. PlayerVisitor
 
 remove MovableEntity
 remove Entity
-Interactable <|.. Ghost
+Interactable <|. Ghost
 Interactable <|.. Player
 Interactable <|.. Pellet
 
 remove Interactor
 
 
+' Additions
+
 ' REMOVE
 '#General diagram
 'TODO
 
 '#Specifically for the simplified diagram !
+' \t\+ toString().*\n
+' \t[+-].*(SPRITE|Sprite).*\n
+' \t[+~-].*(SPRITE|Sprite).*\n
+' \t[+~-].*(Scheduled|Executor).*\n
+' \t- \{static\} ([A-Z_])+:.*\n
+
+' Ghost <\|\-\-.*\n
+Ghost <|- StormTrooper
+Ghost <|-- Vader
+Ghost <|-- Luke
+Ghost <|-- Sith
+Ghost <|- BobaFett
+
+' \t\+ interactWith\(other: Interactable\).*\n
+
+' \t- handler: PlayerVisitor\n
+' \t- player: Player\n
+Player -- PlayerVisitor: handler >
+
+'TODO: should we make links for Sith.handler and co ??
 
 ' ENDSTATIC
 class PlayerInvincibleVisitor {
-	- {static} INVINCIBLE_DURATION: int
-	- {static} EXECUTOR: ScheduledExecutorService
-	- endFuture: ScheduledFuture<?>
-	- blinkFuture: ScheduledFuture<?>
 	+ isScary(): boolean
 	+ isInteractable(): boolean
 	+ eatSuperPellet(): void
@@ -80,35 +101,25 @@ class PlayerInvincibleVisitor {
 
 class GroundCell {
 	+ isWalkableBy(_any: Entity): boolean
-	+ getSprite(): Sprite
 }
 
 class StormTrooper {
-	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
-	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- handler: InteractionVisitor
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
 class StormTrooper$StormTrooperInteractionVisitor {
 }
 class PlayerDeadVisitor {
-	- deathSprites: AnimatedSprite
 	+ isScary(): boolean
 	+ isInteractable(): boolean
 	+ eatSuperPellet(): void
 	+ kill(): void
-	+ getSprite(): Sprite
 }
 
 
 class SuperPellet {
-	+ getSprite(): Sprite
 	+ accept(v: InteractionVisitor): void
 }
 
@@ -125,7 +136,6 @@ abstract class Cell {
 	+ addOccupant(entity: Entity): void
 	+ removeOccupant(entity: Entity): void
 	+ {abstract}isWalkableBy(entity: Entity): boolean
-	+ {abstract}getSprite(): Sprite
 }
 
 
@@ -141,7 +151,6 @@ class Level {
 	- moveLock: Object
 	- startLock: Object
 	- board: Board
-	- entityThreads: Map<MovableEntity,ScheduledExecutorService>
 	- players: List<Player>
 	- observers: List<LevelObserver>
 	- running: boolean
@@ -170,8 +179,8 @@ class Level$EntityTask {
 
 
 interface Level$LevelObserver {
-	~ onLevelWon(): void
-	~ onLevelLost(): void
+	+ onLevelWon(): void
+	+ onLevelLost(): void
 }
 
 abstract class Ghost {
@@ -181,9 +190,6 @@ abstract class Ghost {
 	- blinking: boolean
 	- goingHome: boolean
 	- pathUpdateInterval: int
-	~ {abstract}getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ {abstract}getInvincibleSprites(): Map<Direction,AnimatedSprite>
-	+ getSprite(): Sprite
 	+ toggleBlinking(): void
 	+ getMoveInterval(): int
 	+ getNextMove(): Direction
@@ -201,27 +207,21 @@ class Ghost$GhostInteractionVisitor {
 
 class SpeechBubble {
 	- text: String
-	- sprite: Sprite
-	+ getSprite(): Sprite
 	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
 }
 
 
 class SpeechBubble$SpeechBubbleSprite {
-	- {static} OPACITY_INTERVAL: int
-	- backgroundSprite: Sprite
 	- lastUpdate: long
 	- opacity: int
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
 }
 
 
 interface Interactor {
-	~ interactWith(other: Interactable): void
 }
 
 enum Direction {
@@ -237,7 +237,6 @@ enum Direction {
 	+ {static} fromInt(index: int): Direction
 	+ {static} fromVector(v: Vector): Direction
 	+ {static} random(): Direction
-	+ toString(): String
 }
 
 
@@ -248,32 +247,26 @@ class RandomGenerator {
 
 
 interface InteractionVisitor {
-	~ visit(player: Player): void
-	~ visit(pellet: Pellet): void
-	~ visit(pellet: SuperPellet): void
-	~ visit(vader: Vader): void
-	~ visit(luke: Luke): void
-	~ visit(sith: Sith): void
-	~ visit(stormTrooper: StormTrooper): void
-	~ visit(bobaFett: BobaFett): void
+	+ visit(player: Player): void
+	+ visit(pellet: Pellet): void
+	+ visit(pellet: SuperPellet): void
+	+ visit(vader: Vader): void
+	+ visit(luke: Luke): void
+	+ visit(sith: Sith): void
+	+ visit(stormTrooper: StormTrooper): void
+	+ visit(bobaFett: BobaFett): void
 }
 
 class BobaFett {
-	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
-	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- moveInterval: int
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ moveFaster(): void
 	+ getMoveInterval(): int
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
 interface Interactable {
-	~ accept(v: InteractionVisitor): void
+	+ accept(v: InteractionVisitor): void
 }
 
 class Pathfinding {
@@ -291,14 +284,12 @@ class Pathfinding$Node {
 
 class DefaultSprite {
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
 }
 
 class WallCell {
 	+ isWalkableBy(_any: Entity): boolean
-	+ getSprite(): Sprite
 }
 
 class Vector {
@@ -342,7 +333,6 @@ class Vector {
 class ColorSprite {
 	- color: Color
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
 }
@@ -366,12 +356,10 @@ class RegionOfInterest {
 
 class DoorCell {
 	+ isWalkableBy(entity: Entity): boolean
-	+ getSprite(): Sprite
 }
 
 class Pellet {
 	+ getLayer(): int
-	+ getSprite(): Sprite
 	+ accept(v: InteractionVisitor): void
 }
 
@@ -382,7 +370,6 @@ class MapParser {
 }
 
 class GameFrame {
-	- {static} FRAME_RATE: int
 	- panel: LevelPanel
 	+ start(): void
 }
@@ -395,14 +382,8 @@ class GameFrame$KeyListener {
 
 
 class Sith {
-	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
-	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- handler: InteractionVisitor
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
@@ -426,36 +407,24 @@ abstract class AbstractInteractionVisitor {
 }
 
 class Luke {
-	- {static} SPRITES: Map<Direction,AnimatedSprite>
 	- handler: InteractionVisitor
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
 class Luke$LukeInteractionVisitor {
 }
 abstract class SpriteRegister {
-	- spriteCache: Map<String,Sprite>
-	+ loadSprite(resource: String): Sprite
-	+ createAnimation(resource: Sprite, frames: int, delay: int, loop: boolean): AnimatedSprite
-	- loadResource(resource: String): Sprite
 }
 
 
 class ButtonPanel {
 }
 class Player {
-	- {static} DEFAULT_INTERVAL: int
-	- handler: PlayerVisitor
 	- requestedDirection: Direction
 	- moveInterval: int
 	+ isAlive(): boolean
 	+ isScary(): boolean
-	+ getSprite(): Sprite
 	+ setHandler(handler: PlayerVisitor): void
 	+ setRequestedDirection(requestedDirection: Direction): void
 	+ getMoveInterval(): int
@@ -464,16 +433,11 @@ class Player {
 	+ kill(): void
 	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
 abstract class PlayerVisitor {
-	- player: Player
-	- sprites: Map<Direction,AnimatedSprite>
 	# getPlayer(): Player
-	+ getSprite(): Sprite
 	# setRedSprites(): void
 	+ {abstract}isScary(): boolean
 	+ {abstract}isInteractable(): boolean
@@ -488,7 +452,6 @@ abstract class PlayerVisitor {
 class ImageSprite {
 	- image: Image
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
 }
@@ -516,7 +479,6 @@ class LevelPanel {
 
 
 class GameWindow {
-	- player: Player
 	- level: Level
 	- frame: GameFrame
 	+ begin(): void
@@ -528,18 +490,11 @@ class GameWindow {
 
 
 class GameWindow$InstanceHolder {
-	- {static} INSTANCE: GameWindow
 }
 
 class Vader {
-	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
-	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- handler: InteractionVisitor
-	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
-	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
-	+ interactWith(other: Interactable): void
-	+ toString(): String
 }
 
 
@@ -548,14 +503,12 @@ class Vader$VaderInteractionVisitor {
 }
 
 interface Sprite {
-	~ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	~ slice(roi: RegionOfInterest): Sprite
-	~ getWidth(): int
-	~ getHeight(): int
+	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
+	+ getWidth(): int
+	+ getHeight(): int
 }
 
 abstract class Entity {
-	- {static} SPEECH_DEBOUNCE: int
 	- cell: Cell
 	- direction: Direction
 	- lastSpeech: long
@@ -568,33 +521,10 @@ abstract class Entity {
 	+ leaveCell(): void
 	+ spawnSpeech(text: String): void
 	+ {abstract}getLayer(): int
-	+ {abstract}getSprite(): Sprite
 }
 
 
 class PacmanSprites {
-	- {static} ANIMATION_DELAY: int
-	- {static} DIRECTED_ORDER: Direction[]
-	- {static} INSTANCE: PacmanSprites
-	+ getPacman(): Map<Direction,AnimatedSprite>
-	+ getRedPacman(): Map<Direction,AnimatedSprite>
-	+ getPacmanDeath(): AnimatedSprite
-	+ getBackground(): Sprite
-	+ getPellet(): Sprite
-	+ getSuperPellet(): Sprite
-	+ getSpeechBackground(): Sprite
-	+ getRedGhost(): Map<Direction,AnimatedSprite>
-	+ getSith(): Map<Direction,AnimatedSprite>
-	+ getEdibleSith(): Map<Direction,AnimatedSprite>
-	+ getLuke(): Map<Direction,AnimatedSprite>
-	+ getVader(): Map<Direction,AnimatedSprite>
-	+ getEdibleVader(): Map<Direction,AnimatedSprite>
-	+ getStormTrooper(): Map<Direction,AnimatedSprite>
-	+ getEdibleStormTrooper(): Map<Direction,AnimatedSprite>
-	+ getBobaFett(): Map<Direction,AnimatedSprite>
-	+ getEdibleBobaFett(): Map<Direction,AnimatedSprite>
-	- loadDirectedSprites(resource: String, frames: int, spriteWidth: int, \n\t spriteHeight: int): Map<Direction,AnimatedSprite>
-	+ {static} getInstance(): PacmanSprites
 }
 
 
@@ -615,10 +545,7 @@ class LevelBuilder {
 
 
 class AnimatedSprite {
-	- {static} ANIMATION_END: Sprite
-	- {static} DEFAULT_BLINK_DELAY: int
 	- visible: boolean
-	- frames: Sprite[]
 	- delay: int
 	- currentFrame: int
 	- looping: boolean
@@ -635,10 +562,8 @@ class AnimatedSprite {
 	- updateBlinking(): void
 	- updateAnimation(): void
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
-	- getCurrentFrame(): Sprite
 }
 
 
@@ -646,7 +571,6 @@ class AnimatedSprite {
 
 PlayerVisitor <|-- PlayerInvincibleVisitor
 Cell <|-- GroundCell
-Ghost <|-- StormTrooper
 StormTrooper +-- StormTrooper$StormTrooperInteractionVisitor
 GhostInteractionVisitor <|-- StormTrooper$StormTrooperInteractionVisitor
 PlayerVisitor <|-- PlayerDeadVisitor
@@ -662,7 +586,6 @@ AbstractInteractionVisitor <|-- Ghost$GhostInteractionVisitor
 Entity <|-- SpeechBubble
 SpeechBubble +-- SpeechBubble$SpeechBubbleSprite
 Sprite <|.. SpeechBubble$SpeechBubbleSprite
-Ghost <|-- BobaFett
 Pathfinding +-- Pathfinding$Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
@@ -672,12 +595,10 @@ Entity <|-- Pellet
 JFrame <|-- GameFrame
 GameFrame +-- GameFrame$KeyListener
 KeyAdapter <|-- GameFrame$KeyListener
-Ghost <|-- Sith
 Sith +-- Sith$SithInteractionVisitor
 GhostInteractionVisitor <|-- Sith$SithInteractionVisitor
 Entity <|-- MovableEntity
 InteractionVisitor <|.. AbstractInteractionVisitor
-Ghost <|-- Luke
 Luke +-- Luke$LukeInteractionVisitor
 GhostInteractionVisitor <|-- Luke$LukeInteractionVisitor
 JPanel <|-- ButtonPanel
@@ -688,7 +609,6 @@ Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
 GameWindow +-- GameWindow$InstanceHolder
-Ghost <|-- Vader
 Vader +-- Vader$VaderInteractionVisitor
 GhostInteractionVisitor <|-- Vader$VaderInteractionVisitor
 Interactable <|.. Entity
