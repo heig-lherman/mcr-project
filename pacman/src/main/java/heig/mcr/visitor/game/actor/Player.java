@@ -135,7 +135,8 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(BobaFett bobaFett) {
-            handleGhostInteraction(bobaFett);
+            bobaFett.moveFaster();
+            System.out.println(bobaFett + " is not dangerous and is moving a bit faster after meeting " + name);
         }
 
         private void handleGhostInteraction(Ghost ghost) {
@@ -160,7 +161,7 @@ public class Player extends MovableEntity implements Interactor {
 
         @Override
         public void interactWith(Luke luke) {
-            System.out.println("Killed by " + luke + "while trying to eat him");
+            System.out.println("Killed by " + luke + " while trying to eat him");
             kill();
         }
 
@@ -178,6 +179,10 @@ public class Player extends MovableEntity implements Interactor {
         @Override
         public void interactWith(BobaFett bobaFett) {
             handleBaseSuperInteraction(bobaFett);
+            int newInterval = bobaFett.getMoveInterval() - 100;
+            if (newInterval > 0)
+                moveInterval = newInterval;
+            System.out.println("Eating bobaFett is making me faster !");
         }
 
         @Override
