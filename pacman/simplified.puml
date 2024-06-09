@@ -141,7 +141,7 @@ class Level {
 	- moveLock: Object
 	- startLock: Object
 	- board: Board
-	- entityThreads: Map<MovableEntity,ExecutorService>
+	- entityThreads: Map<MovableEntity,ScheduledExecutorService>
 	- players: List<Player>
 	- observers: List<LevelObserver>
 	- running: boolean
@@ -175,10 +175,11 @@ interface Level$LevelObserver {
 }
 
 abstract class Ghost {
-	- pathToPlayer: List<Direction>
+	- pathToTarget: List<Direction>
 	- pathIndex: int
 	- moveCounter: int
 	- blinking: boolean
+	- goingHome: boolean
 	- pathUpdateInterval: int
 	~ {abstract}getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ {abstract}getInvincibleSprites(): Map<Direction,AnimatedSprite>
@@ -186,6 +187,9 @@ abstract class Ghost {
 	+ toggleBlinking(): void
 	+ getMoveInterval(): int
 	+ getNextMove(): Direction
+	+ sendHome(): void
+	- updatePathTo(target: Cell): void
+	- updatePathToHome(): void
 	- updatePathToPlayer(): void
 	+ getLayer(): int
 }
@@ -195,19 +199,24 @@ class Ghost$GhostInteractionVisitor {
 	+ visit(player: Player): void
 }
 
-class DiscreteCoordinates {
-	- x: int
-	- y: int
-	+ {static} ORIGIN: DiscreteCoordinates
-	+ left(): DiscreteCoordinates
-	+ right(): DiscreteCoordinates
-	+ up(): DiscreteCoordinates
-	+ down(): DiscreteCoordinates
-	+ getNeighbours(): List<DiscreteCoordinates>
-	+ equals(o: Object): boolean
-	+ hashCode(): int
-	+ y(): int
-	+ x(): int
+class SpeechBubble {
+	- text: String
+	- sprite: Sprite
+	+ getSprite(): Sprite
+	+ getLayer(): int
+	+ accept(v: InteractionVisitor): void
+}
+
+
+class SpeechBubble$SpeechBubbleSprite {
+	- {static} OPACITY_INTERVAL: int
+	- backgroundSprite: Sprite
+	- lastUpdate: long
+	- opacity: int
+	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
+	+ slice(roi: RegionOfInterest): Sprite
+	+ getWidth(): int
+	+ getHeight(): int
 }
 
 
@@ -349,9 +358,9 @@ class RegionOfInterest {
 	+ y1(): int
 	+ y2(): int
 	+ w(): int
-	+ y(): int
-	+ h(): int
 	+ x(): int
+	+ h(): int
+	+ y(): int
 }
 
 
@@ -365,12 +374,6 @@ class Pellet {
 	+ getSprite(): Sprite
 	+ accept(v: InteractionVisitor): void
 }
-
-class WallSprite {
-	- {static} WALL_COLOR: Color
-	+ slice(roi: RegionOfInterest): Sprite
-}
-
 
 class MapParser {
 	+ {static} parse(resourcePath: String): Level
@@ -541,7 +544,9 @@ class Vader {
 
 
 class Vader$VaderInteractionVisitor {
+	+ visit(luke: Luke): void
 }
+
 interface Sprite {
 	~ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
 	~ slice(roi: RegionOfInterest): Sprite
@@ -550,8 +555,10 @@ interface Sprite {
 }
 
 abstract class Entity {
+	- {static} SPEECH_DEBOUNCE: int
 	- cell: Cell
 	- direction: Direction
+	- lastSpeech: long
 	- initialCell: Cell
 	+ getDirection(): Direction
 	+ setDirection(direction: Direction): void
@@ -559,6 +566,7 @@ abstract class Entity {
 	+ getCell(): Cell
 	# setCell(cell: Cell): void
 	+ leaveCell(): void
+	+ spawnSpeech(text: String): void
 	+ {abstract}getLayer(): int
 	+ {abstract}getSprite(): Sprite
 }
@@ -574,6 +582,7 @@ class PacmanSprites {
 	+ getBackground(): Sprite
 	+ getPellet(): Sprite
 	+ getSuperPellet(): Sprite
+	+ getSpeechBackground(): Sprite
 	+ getRedGhost(): Map<Direction,AnimatedSprite>
 	+ getSith(): Map<Direction,AnimatedSprite>
 	+ getEdibleSith(): Map<Direction,AnimatedSprite>
@@ -650,6 +659,9 @@ Interactor <|.. Ghost
 MovableEntity <|-- Ghost
 Ghost +-- Ghost$GhostInteractionVisitor
 AbstractInteractionVisitor <|-- Ghost$GhostInteractionVisitor
+Entity <|-- SpeechBubble
+SpeechBubble +-- SpeechBubble$SpeechBubbleSprite
+Sprite <|.. SpeechBubble$SpeechBubbleSprite
 Ghost <|-- BobaFett
 Pathfinding +-- Pathfinding$Node
 Sprite <|.. DefaultSprite
@@ -657,7 +669,6 @@ Cell <|-- WallCell
 Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
-ColorSprite <|-- WallSprite
 JFrame <|-- GameFrame
 GameFrame +-- GameFrame$KeyListener
 KeyAdapter <|-- GameFrame$KeyListener
