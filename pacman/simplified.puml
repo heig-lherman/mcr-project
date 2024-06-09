@@ -1,0 +1,219 @@
+@startuml
+
+hide empty members
+skinparam classAttributeIconSize 0
+scale 1.3
+Vader -[hidden]- BobaFett
+' Additions
+hide Main
+
+
+class StormTrooper {
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
+}
+
+class SuperPellet {
+	+ getSprite(): Sprite
+	+ acceptInteraction(v: InteractionVisitor): void
+}
+
+abstract class Cell {
+	- occupants: Set<Entity>
+	- neighbors: Map<Direction,Cell>
+	+ getNeighbor(direction: Direction): Cell
+	+ linkNeighbor(direction: Direction, cell: Cell): void
+	+ getOccupants(): Collection<Entity>
+	+ addOccupant(entity: Entity): void
+	+ removeOccupant(entity: Entity): void
+	+ {abstract}isWalkable(): boolean
+	+ {abstract}getSprite(): Sprite
+}
+
+
+abstract class Ghost {
+	- state: GhostState
+	- directedSprites: Map<Direction,? extends Sprite>
+	- pathToPlayer: List<Direction>
+	- pathIndex: int
+	- moveCounter: int
+	# pathUpdateInterval: int
+	- moveInterval: int
+	+ getLayer(): int
+	+ getSprite(): Sprite
+	+ getMoveInterval(): int
+	+ setState(state: GhostState): void
+	+ isEdible(): boolean
+	+ becomeEdible(): void
+	+ becomeInvincible(): void
+	~ {abstract}getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ {abstract}getInvincibleSprites(): Map<Direction,AnimatedSprite>
+	- changeSprite(): void
+	+ getNextMove(): Direction
+	- updatePathToPlayer(): void
+}
+
+
+interface Interactor {
+	~ interactWith(other: Interactable): void
+}
+
+interface InteractionVisitor {
+	~ interactWith(player: Player): void
+	~ interactWith(pellet: Pellet): void
+	~ interactWith(pellet: SuperPellet): void
+	~ interactWith(vader: Vader): void
+	~ interactWith(luke: Luke): void
+	~ interactWith(sith: Sith): void
+	~ interactWith(stormTrooper: StormTrooper): void
+	~ interactWith(bobaFett: BobaFett): void
+}
+
+class BobaFett {
+	- moveInterval: int
+	+ moveFaster(): void
+	+ getMoveInterval(): int
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
+}
+
+interface Interactable {
+	~ acceptInteraction(v: InteractionVisitor): void
+}
+
+class WallCell {
+	+ isWalkable(): boolean
+	+ getSprite(): Sprite
+}
+
+class Pellet {
+	+ getLayer(): int
+	+ getSprite(): Sprite
+	+ acceptInteraction(v: InteractionVisitor): void
+}
+
+class Sith {
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
+}
+
+abstract class MovableEntity {
+	# name: String
+	+ {abstract}getMoveInterval(): int
+	+ {abstract}getNextMove(): Direction
+	+ toString(): String
+}
+
+
+abstract class AbstractInteractionVisitor {
+	+ interactWith(player: Player): void
+	+ interactWith(pellet: Pellet): void
+	+ interactWith(superPellet: SuperPellet): void
+}
+
+class Luke {
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
+	+ becomeEdible(): void
+}
+
+class Player {
+	- normalHandler: InteractionVisitor
+	- superHandler: InteractionVisitor
+	- currentHandler: InteractionVisitor
+	- directedSprites: Map<Direction,AnimatedSprite>
+	- deathSprites: AnimatedSprite
+	- DEFAULT_INTERVAL: int
+	- requestedDirection: Direction
+	- alive: boolean
+	- moveInterval: int
+	+ isAlive(): boolean
+	+ becomeSuper(): void
+	+ leaveSuper(): void
+	+ setRequestedDirection(requestedDirection: Direction): void
+	+ getMoveInterval(): int
+	+ getNextMove(): Direction
+	+ getSprite(): Sprite
+	+ kill(): void
+	+ changeToRed(): void
+	+ getLayer(): int
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+}
+
+
+class Player$NormalInteractionHandler {
+	+ interactWith(pellet: Pellet): void
+	+ interactWith(superPellet: SuperPellet): void
+	+ interactWith(vader: Vader): void
+	+ interactWith(luke: Luke): void
+	+ interactWith(sith: Sith): void
+	+ interactWith(stormTrooper: StormTrooper): void
+	+ interactWith(bobaFett: BobaFett): void
+	- handleGhostInteraction(ghost: Ghost): void
+}
+
+class Player$SuperInteractionHandler {
+	+ interactWith(pellet: Pellet): void
+	+ interactWith(vader: Vader): void
+	+ interactWith(luke: Luke): void
+	+ interactWith(sith: Sith): void
+	+ interactWith(stormTrooper: StormTrooper): void
+	+ interactWith(bobaFett: BobaFett): void
+	+ interactWith(superPellet: SuperPellet): void
+	- handleBaseSuperInteraction(ghost: Ghost): void
+}
+
+class Vader {
+	+ acceptInteraction(v: InteractionVisitor): void
+	+ interactWith(other: Interactable): void
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
+}
+
+abstract class Entity {
+	- initialCell: Cell
+	- cell: Cell
+	- direction: Direction
+	+ getDirection(): Direction
+	+ setDirection(direction: Direction): void
+	+ getCell(): Cell
+	+ setCell(cell: Cell): void
+	+ leaveCell(): void
+	+ getInitialCell(): Cell
+	+ {abstract}getLayer(): int
+	+ {abstract}getSprite(): Sprite
+}
+
+
+
+
+Cell <|-- GroundCell
+Ghost <|-- StormTrooper
+Pellet <|-- SuperPellet
+Interactor <|.. Ghost
+MovableEntity <|-- Ghost
+Ghost <|-- BobaFett
+Cell <|-- WallCell
+Entity <|-- Pellet
+Ghost <|-- Sith
+Entity <|-- MovableEntity
+InteractionVisitor <|.. AbstractInteractionVisitor
+Ghost <|-- Luke
+Interactor <|.. Player
+MovableEntity <|-- Player
+Player +-- Player$NormalInteractionHandler
+AbstractInteractionVisitor <|-- Player$NormalInteractionHandler
+Player +-- Player$SuperInteractionHandler
+AbstractInteractionVisitor <|-- Player$SuperInteractionHandler
+Ghost <|-- Vader
+Interactable <|.. Entity
+@enduml
