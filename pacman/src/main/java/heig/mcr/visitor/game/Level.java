@@ -103,7 +103,6 @@ public class Level {
 
     private void startThreads() {
         for (var entity : entityThreads.keySet()) {
-            System.out.println("Starting thread for entity: " + entity);
             var service = Executors.newSingleThreadScheduledExecutor();
             service.scheduleAtFixedRate(
                     new EntityTask(entity),
