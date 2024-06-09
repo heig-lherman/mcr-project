@@ -14,7 +14,7 @@ public class Vader extends Ghost {
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleVader();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getVader();
 
-    private final InteractionVisitor handler = new VaderInteractionHandler();
+    private final InteractionVisitor handler = new VaderInteractionVisitor();
 
     public Vader(Cell initialCell) {
         super(initialCell, 6);
@@ -40,7 +40,7 @@ public class Vader extends Ghost {
         other.accept(handler);
     }
 
-    private class VaderInteractionHandler extends GhostInteractionHandler {
+    private class VaderInteractionVisitor extends GhostInteractionVisitor {
     }
 
     @Override

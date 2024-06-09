@@ -61,7 +61,7 @@ public class PlayerInvincibleVisitor extends PlayerVisitor {
     }
 
     public void endInvincibility() {
-        getPlayer().setState(new PlayerNormalVisitor(getPlayer()));
+        getPlayer().setHandler(new PlayerNormalVisitor(getPlayer()));
         GameWindow.getInstance().getActiveLevel().toggleBlinking();
     }
 
@@ -77,7 +77,7 @@ public class PlayerInvincibleVisitor extends PlayerVisitor {
     public void visit(Luke luke) {
         System.out.printf("%s killed by %s while trying to eat him%n", getPlayer(), luke);
         // Special kill case since Luke cannot be eaten
-        getPlayer().setState(new PlayerDeadVisitor(getPlayer()));
+        getPlayer().setHandler(new PlayerDeadVisitor(getPlayer()));
     }
 
     @Override

@@ -21,12 +21,12 @@ public class PlayerNormalVisitor extends PlayerVisitor {
 
     @Override
     public void eatSuperPellet() {
-        getPlayer().setState(new PlayerInvincibleVisitor(getPlayer()));
+        getPlayer().setHandler(new PlayerInvincibleVisitor(getPlayer()));
     }
 
     @Override
     public void kill() {
-        getPlayer().setState(new PlayerDeadVisitor(getPlayer()));
+        getPlayer().setHandler(new PlayerDeadVisitor(getPlayer()));
     }
 
     // Interactions

@@ -13,7 +13,7 @@ public class Luke extends Ghost {
 
     private static final Map<Direction, AnimatedSprite> SPRITES = PacmanSprites.getInstance().getLuke();
 
-    private final InteractionVisitor handler = new LukeInteractionHandler();
+    private final InteractionVisitor handler = new LukeInteractionVisitor();
 
     public Luke(Cell initialCell) {
         super(initialCell, 4);
@@ -39,7 +39,7 @@ public class Luke extends Ghost {
         other.accept(handler);
     }
 
-    private class LukeInteractionHandler extends GhostInteractionHandler {
+    private class LukeInteractionVisitor extends GhostInteractionVisitor {
     }
 
     @Override

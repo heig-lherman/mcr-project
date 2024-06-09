@@ -14,7 +14,7 @@ public class Player extends MovableEntity implements Interactor {
 
     private static final int DEFAULT_INTERVAL = 300;
 
-    private PlayerVisitor state = new PlayerNormalVisitor(this);
+    private PlayerVisitor handler = new PlayerNormalVisitor(this);
     private Direction requestedDirection = Direction.UP;
 
     private int moveInterval = DEFAULT_INTERVAL;
@@ -24,22 +24,22 @@ public class Player extends MovableEntity implements Interactor {
     }
 
     public boolean isAlive() {
-        return state.isInteractable();
+        return handler.isInteractable();
     }
 
     public boolean isScary() {
-        return state.isScary();
+        return handler.isScary();
     }
 
     @Override
     public Sprite getSprite() {
-        return state.getSprite();
+        return handler.getSprite();
     }
 
-    public void setState(PlayerVisitor state) {
-        System.out.println("Player state: " + state.getClass().getSimpleName());
-        this.state.dispose();
-        this.state = state;
+    public void setHandler(PlayerVisitor handler) {
+        System.out.println("Player state: " + handler.getClass().getSimpleName());
+        this.handler.dispose();
+        this.handler = handler;
     }
 
     public void setRequestedDirection(Direction requestedDirection) {
@@ -65,7 +65,7 @@ public class Player extends MovableEntity implements Interactor {
     }
 
     public void kill() {
-        state.kill();
+        handler.kill();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class Player extends MovableEntity implements Interactor {
 
     @Override
     public void interactWith(Interactable other) {
-        other.accept(state);
+        other.accept(handler);
     }
 
     @Override

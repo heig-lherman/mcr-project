@@ -14,7 +14,7 @@ public class Sith extends Ghost {
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleSith();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getSith();
 
-    private final InteractionVisitor handler = new SithInteractionHandler();
+    private final InteractionVisitor handler = new SithInteractionVisitor();
 
     public Sith(Cell initialCell) {
         super(initialCell, 8);
@@ -40,7 +40,7 @@ public class Sith extends Ghost {
         other.accept(handler);
     }
 
-    private class SithInteractionHandler extends GhostInteractionHandler {
+    private class SithInteractionVisitor extends GhostInteractionVisitor {
     }
 
     @Override

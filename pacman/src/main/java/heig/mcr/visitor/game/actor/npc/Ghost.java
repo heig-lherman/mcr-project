@@ -91,7 +91,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
         return 10;
     }
 
-    protected class GhostInteractionHandler extends AbstractInteractionVisitor {
+    protected class GhostInteractionVisitor extends AbstractInteractionVisitor {
         @Override
         public void visit(Player player) {
             if (!player.isScary()) {

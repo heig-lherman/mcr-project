@@ -14,7 +14,7 @@ public class StormTrooper extends Ghost {
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleStormTrooper();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getStormTrooper();
 
-    private final InteractionVisitor handler = new StormTrooperInteractionHandler();
+    private final InteractionVisitor handler = new StormTrooperInteractionVisitor();
 
     public StormTrooper(Cell initialCell) {
         super(initialCell, 12);
@@ -40,7 +40,7 @@ public class StormTrooper extends Ghost {
         other.accept(handler);
     }
 
-    private class StormTrooperInteractionHandler extends GhostInteractionHandler {
+    private class StormTrooperInteractionVisitor extends GhostInteractionVisitor {
     }
 
     @Override
