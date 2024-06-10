@@ -1,7 +1,6 @@
 package heig.mcr.visitor.board;
 
 import heig.mcr.visitor.math.Direction;
-
 import java.util.stream.Stream;
 
 public final class Board {

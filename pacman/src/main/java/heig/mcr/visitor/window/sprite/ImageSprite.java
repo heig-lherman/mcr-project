@@ -1,7 +1,6 @@
 package heig.mcr.visitor.window.sprite;
 
 import heig.mcr.visitor.math.RegionOfInterest;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

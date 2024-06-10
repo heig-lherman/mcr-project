@@ -5,7 +5,7 @@ import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
 import heig.mcr.visitor.game.Level;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
-
+import heig.mcr.visitor.window.sprite.SpecialRender;
 import javax.swing.*;
 import java.awt.*;
 
@@ -68,6 +68,9 @@ public class LevelPanel extends JPanel {
         cell.getSprite().draw(g, x, y, width, height);
         for (Entity occupant : cell.getOccupants()) {
             occupant.getSprite().draw(g, x, y, width, height);
+            if (occupant instanceof SpecialRender sr && sr.hasSpecialRendering()) {
+                sr.renderSpecial(g, x, y, width, height);
+            }
         }
     }
 }

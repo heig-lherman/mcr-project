@@ -3,7 +3,6 @@ package heig.mcr.visitor.game.actor.handler;
 import heig.mcr.visitor.GameWindow;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.*;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

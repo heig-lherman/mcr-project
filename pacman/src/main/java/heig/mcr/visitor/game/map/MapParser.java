@@ -2,7 +2,6 @@ package heig.mcr.visitor.game.map;
 
 import heig.mcr.visitor.game.Level;
 import heig.mcr.visitor.game.actor.npc.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +57,7 @@ public final class MapParser {
                     case 'B':
                         builder.addGhost(x, y, BobaFett::new);
                         break;
-                    case '|':
+                    case '|', '#':
                         builder.addWall(x, y);
                         break;
                     case '.':

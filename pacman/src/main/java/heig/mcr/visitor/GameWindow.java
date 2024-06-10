@@ -5,7 +5,6 @@ import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.map.MapParser;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.GameFrame;
-
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;

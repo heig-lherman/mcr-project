@@ -2,7 +2,6 @@ package heig.mcr.visitor.math;
 
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
-
 import java.util.*;
 
 public final class Pathfinding {

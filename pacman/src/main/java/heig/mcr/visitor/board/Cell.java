@@ -2,7 +2,6 @@ package heig.mcr.visitor.board;
 
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.util.*;
 
 public abstract class Cell {

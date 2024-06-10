@@ -5,7 +5,6 @@ import heig.mcr.visitor.game.actor.Pellet;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.math.Direction;
-
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

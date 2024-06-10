@@ -1,7 +1,6 @@
 package heig.mcr.visitor.window;
 
 import heig.mcr.visitor.game.Level;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;

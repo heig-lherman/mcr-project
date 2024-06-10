@@ -6,7 +6,6 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.RegionOfInterest;
 import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.awt.*;
 
 public class SpeechBubble extends Entity {

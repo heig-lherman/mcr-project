@@ -11,7 +11,6 @@ import heig.mcr.visitor.math.Pathfinding;
 import heig.mcr.visitor.math.RandomGenerator;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

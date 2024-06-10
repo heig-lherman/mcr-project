@@ -8,7 +8,6 @@ import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
-
 import java.util.Map;
 
 public abstract class PlayerVisitor extends AbstractInteractionVisitor {

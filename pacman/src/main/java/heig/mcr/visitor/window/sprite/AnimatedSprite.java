@@ -1,7 +1,6 @@
 package heig.mcr.visitor.window.sprite;
 
 import heig.mcr.visitor.math.RegionOfInterest;
-
 import java.awt.*;
 
 public class AnimatedSprite implements Sprite {
@@ -71,6 +70,10 @@ public class AnimatedSprite implements Sprite {
         animating = false;
     }
 
+    public boolean isAnimating() {
+        return animating;
+    }
+
     public void startBlinking() {
         blinking = true;
         lastBlink = 0;
@@ -133,6 +136,10 @@ public class AnimatedSprite implements Sprite {
     @Override
     public int getHeight() {
         return getCurrentFrame().getHeight();
+    }
+
+    public int getCurrentFrameStep(){
+        return currentFrame;
     }
 
     private Sprite getCurrentFrame() {

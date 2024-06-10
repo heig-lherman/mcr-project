@@ -5,7 +5,6 @@ import heig.mcr.visitor.math.RegionOfInterest;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 import heig.mcr.visitor.window.sprite.SpriteRegister;
-
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -35,6 +34,11 @@ public final class PacmanSprites extends SpriteRegister {
     public AnimatedSprite getPacmanDeath() {
         Sprite base = loadSprite("/sprites/pacman-death.png");
         return createAnimation(base, 11, ANIMATION_DELAY, false);
+    }
+
+    public AnimatedSprite getTeleport() {
+        Sprite base = loadSprite("/sprites/teleport.png");
+        return createAnimation(base, 7, 100, false);
     }
 
     public Sprite getBackground() {
