@@ -47,11 +47,12 @@ remove Main
 remove AbstractInteractionVisitor
 remove GhostInteractionVisitor
 remove GhostInteractionVisitor
-InteractionVisitor <|.. StormTrooperInteractionVisitor
-InteractionVisitor <|.. SithInteractionVisitor
-InteractionVisitor <|.. LukeInteractionVisitor
-InteractionVisitor <|.. VaderInteractionVisitor
-InteractionVisitor <|.. PlayerVisitor
+InteractionVisitor <|.u. StormTrooperInteractionVisitor
+InteractionVisitor <|.u. SithInteractionVisitor
+InteractionVisitor <|.u. VaderInteractionVisitor
+InteractionVisitor <|.u. PlayerVisitor
+InteractionVisitor <|.u. LukeInteractionVisitor
+InteractionVisitor <|.u. BobaFettInteractionVisitor
 
 remove MovableEntity
 remove Entity
@@ -61,7 +62,14 @@ Interactable <|.. Pellet
 
 remove Interactor
 
-InteractionVisitor -[hidden]- Luke
+' InteractionVisitor -[hidden]- Luke
+
+'TODO: should we make links for Sith.handler and co ??
+' InteractionVisitor -- BobaFett
+' InteractionVisitor -- Luke
+' InteractionVisitor -- Sith
+' InteractionVisitor -- Vader
+' InteractionVisitor -- StormTrooper
 
 ' Additions
 
@@ -72,7 +80,7 @@ InteractionVisitor -[hidden]- Luke
 '#Specifically for the simplified diagram !
 ' \t\+ toString().*\n
 ' \t[+-].*(SPRITE|Sprite).*\n
-' \t[+~-].*(SPRITE|Sprite).*\n
+' \t[+~-].*(SPRITE|Sprite|renderSpecial|Render|getLayer).*\n
 ' \t[+~-].*(Scheduled|Executor).*\n
 ' \t- \{static\} ([A-Z_])+:.*\n
 
@@ -88,9 +96,6 @@ BobaFett -|>  Ghost
 ' \t- handler: PlayerVisitor\n
 ' \t- player: Player\n
 Player -- PlayerVisitor: handler >
-
-'TODO: should we make links for Sith.handler and co ??
-'TODO: should we delete PlayerVisitor
 
 'Delete subclasses prefix ending in $
 ' ([A-Z][a-z]+){1,4}\$
@@ -123,15 +128,11 @@ class StormTrooper {
 	+ teleportRandomly(): void
 	- isNearPlayer(cell: Cell): boolean
 	+ triggerTeleport(): void
-	+ hasSpecialRendering(): boolean
-	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
 }
 
 
 class StormTrooperInteractionVisitor {
-	+ visit(sith: Sith): void
 }
-
 class PlayerDeadVisitor {
 	+ isScary(): boolean
 	+ isInteractable(): boolean
@@ -218,7 +219,6 @@ abstract class Ghost {
 	- updatePathTo(target: Cell): void
 	- updatePathToHome(): void
 	- updatePathToPlayer(): void
-	+ getLayer(): int
 }
 
 
@@ -228,7 +228,6 @@ class GhostInteractionVisitor {
 
 class SpeechBubble {
 	- text: String
-	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
 }
 
@@ -386,7 +385,6 @@ class DoorCell {
 }
 
 class Pellet {
-	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
 }
 
@@ -415,7 +413,9 @@ class Sith {
 
 
 class SithInteractionVisitor {
+	+ visit(stormTrooper: StormTrooper): void
 }
+
 abstract class MovableEntity {
 	+ {abstract}getMoveInterval(): int
 	+ {abstract}getNextMove(): Direction
@@ -442,8 +442,6 @@ class Luke {
 class LukeInteractionVisitor {
 }
 interface SpecialRender {
-	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
-	+ hasSpecialRendering(): boolean
 }
 
 abstract class SpriteRegister {
@@ -463,7 +461,6 @@ class Player {
 	+ setMoveInterval(moveInterval: int): void
 	+ getNextMove(): Direction
 	+ kill(): void
-	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
 }
 
@@ -552,7 +549,6 @@ abstract class Entity {
 	# setCell(cell: Cell): void
 	+ leaveCell(): void
 	+ spawnSpeech(text: String): void
-	+ {abstract}getLayer(): int
 }
 
 
