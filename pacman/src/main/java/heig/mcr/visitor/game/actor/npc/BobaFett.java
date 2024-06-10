@@ -54,13 +54,15 @@ public class BobaFett extends Ghost {
     }
 
     private class BobaFettInteractionVisitor extends GhostInteractionVisitor {
+
         @Override
         public void visit(SuperPellet superPellet) {
             superPellet.leaveCell();
             spawnSpeech("Hmmm... some Beskar!");
         }
+
         @Override
-        public void visit(Player player){
+        public void visit(Player player) {
             // Do nothing
         }
     }

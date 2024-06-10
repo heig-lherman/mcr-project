@@ -106,9 +106,6 @@ public class StormTrooper extends Ghost implements SpecialRender {
     }
 
     private class StormTrooperInteractionVisitor extends GhostInteractionVisitor {
-        public void visit(Sith sith) {
-            triggerTeleport();
-        }
     }
 
     @Override
