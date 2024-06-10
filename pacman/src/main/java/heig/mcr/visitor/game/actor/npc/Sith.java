@@ -40,6 +40,11 @@ public class Sith extends Ghost {
     }
 
     private class SithInteractionVisitor extends GhostInteractionVisitor {
+
+        @Override
+        public void visit(StormTrooper stormTrooper) {
+            stormTrooper.triggerTeleport();
+        }
     }
 
     @Override

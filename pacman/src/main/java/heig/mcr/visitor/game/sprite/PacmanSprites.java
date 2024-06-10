@@ -38,7 +38,7 @@ public final class PacmanSprites extends SpriteRegister {
 
     public AnimatedSprite getTeleport() {
         Sprite base = loadSprite("/sprites/teleport.png");
-        return createAnimation(base, 7, 100, false);
+        return createAnimation(base, 7, ANIMATION_DELAY, false);
     }
 
     public Sprite getBackground() {

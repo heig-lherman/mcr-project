@@ -74,7 +74,7 @@ public class SpeechBubble extends Entity {
             long now = System.currentTimeMillis();
             if (now - lastUpdate > OPACITY_INTERVAL) {
                 lastUpdate = now;
-                opacity -= 5;
+                opacity -= 3;
             }
 
             if (opacity <= 0) {
