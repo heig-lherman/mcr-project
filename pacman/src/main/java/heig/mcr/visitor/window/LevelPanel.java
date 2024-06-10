@@ -67,7 +67,9 @@ public class LevelPanel extends JPanel {
     private void renderCell(Cell cell, Graphics2D g, int x, int y, int width, int height) {
         cell.getSprite().draw(g, x, y, width, height);
         for (Entity occupant : cell.getOccupants()) {
-            occupant.getSprite().draw(g, x, y, width, height);
+            if(occupant.getSprite() != null){
+                occupant.getSprite().draw(g, x, y, width, height);
+            }
             if (occupant instanceof SpecialRender sr && sr.hasSpecialRendering()) {
                 sr.renderSpecial(g, x, y, width, height);
             }

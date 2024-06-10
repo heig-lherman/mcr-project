@@ -2,6 +2,8 @@ package heig.mcr.visitor.game.actor.npc;
 
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Interactable;
+import heig.mcr.visitor.game.actor.Player;
+import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
@@ -12,11 +14,12 @@ public class BobaFett extends Ghost {
 
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleBobaFett();
     private static final Map<Direction, AnimatedSprite> INVINCIBLE_SPRITES = PacmanSprites.getInstance().getBobaFett();
+    private final InteractionVisitor handler = new BobaFettInteractionVisitor();
 
     private int moveInterval = 300; // starts faster than the others
 
     public BobaFett(Cell initialCell) {
-        super(initialCell, 8);
+        super(initialCell, 12);
     }
 
     @Override
@@ -47,7 +50,19 @@ public class BobaFett extends Ghost {
 
     @Override
     public void interactWith(Interactable other) {
-        // Boba Fett does not interact with other NPCs
+        other.accept(handler);
+    }
+
+    private class BobaFettInteractionVisitor extends GhostInteractionVisitor {
+        @Override
+        public void visit(SuperPellet superPellet) {
+            superPellet.leaveCell();
+            spawnSpeech("Hmmm... some Beskar!");
+        }
+        @Override
+        public void visit(Player player){
+            // Do nothing
+        }
     }
 
     @Override
