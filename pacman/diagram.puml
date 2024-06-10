@@ -42,7 +42,7 @@ together {
 '#General remove diagrams
 
 'Delete subclasses prefix ending in $
-' [A-Z][a-z]+\$
+' ([A-Z][a-z]+){1,4}\$
 
 ' ENDSTATIC
 class PlayerInvincibleVisitor {
@@ -74,16 +74,26 @@ class StormTrooper {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- handler: InteractionVisitor
+	- teleportSprite: AnimatedSprite
+	- teleporting: boolean
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
+	+ teleportRandomly(): void
+	- isNearPlayer(cell: Cell): boolean
+	+ triggerTeleport(): void
+	+ getSprite(): Sprite
+	+ hasSpecialRendering(): boolean
+	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
 	+ toString(): String
 }
 
 
-class StormStormTrooperInteractionVisitor {
+class StormTrooperInteractionVisitor {
+	+ visit(sith: Sith): void
 }
+
 class PlayerDeadVisitor {
 	- deathSprites: AnimatedSprite
 	+ isScary(): boolean
@@ -195,7 +205,7 @@ class SpeechBubble {
 }
 
 
-class SpeechSpeechBubbleSprite {
+class SpeechBubbleSprite {
 	- {static} OPACITY_INTERVAL: int
 	- backgroundSprite: Sprite
 	- lastUpdate: long
@@ -248,6 +258,7 @@ interface InteractionVisitor {
 class BobaFett {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
+	- handler: InteractionVisitor
 	- moveInterval: int
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
@@ -258,6 +269,11 @@ class BobaFett {
 	+ toString(): String
 }
 
+
+class BobaFettInteractionVisitor {
+	+ visit(superPellet: SuperPellet): void
+	+ visit(player: Player): void
+}
 
 interface Interactable {
 	+ accept(v: InteractionVisitor): void
@@ -344,10 +360,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ w(): int
+	+ y(): int
 	+ x(): int
 	+ h(): int
-	+ y(): int
+	+ w(): int
 }
 
 
@@ -375,7 +391,7 @@ class GameFrame {
 }
 
 
-class GameKeyListener {
+class KeyListener {
 	- keybindings: Map<Integer,Consumer<Level>>
 	+ keyPressed(e: KeyEvent): void
 }
@@ -425,6 +441,11 @@ class Luke {
 
 class LukeInteractionVisitor {
 }
+interface SpecialRender {
+	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
+	+ hasSpecialRendering(): boolean
+}
+
 abstract class SpriteRegister {
 	- spriteCache: Map<String,Sprite>
 	+ loadSprite(resource: String): Sprite
@@ -514,7 +535,7 @@ class GameWindow {
 }
 
 
-class GameInstanceHolder {
+class InstanceHolder {
 	- {static} INSTANCE: GameWindow
 }
 
@@ -566,6 +587,7 @@ class PacmanSprites {
 	+ getPacman(): Map<Direction,AnimatedSprite>
 	+ getRedPacman(): Map<Direction,AnimatedSprite>
 	+ getPacmanDeath(): AnimatedSprite
+	+ getTeleport(): AnimatedSprite
 	+ getBackground(): Sprite
 	+ getPellet(): Sprite
 	+ getSuperPellet(): Sprite
@@ -617,6 +639,7 @@ class AnimatedSprite {
 	+ restart(): void
 	+ start(): void
 	+ stop(): void
+	+ isAnimating(): boolean
 	+ startBlinking(): void
 	+ stopBlinking(): void
 	- updateBlinking(): void
@@ -625,6 +648,7 @@ class AnimatedSprite {
 	+ slice(roi: RegionOfInterest): Sprite
 	+ getWidth(): int
 	+ getHeight(): int
+	+ getCurrentFrameStep(): int
 	- getCurrentFrame(): Sprite
 }
 
@@ -633,9 +657,10 @@ class AnimatedSprite {
 
 PlayerVisitor <|-- PlayerInvincibleVisitor
 Cell <|-- GroundCell
+SpecialRender <|.. StormTrooper
 Ghost <|-- StormTrooper
-StormTrooper +-- StormStormTrooperInteractionVisitor
-GhostInteractionVisitor <|-- StormStormTrooperInteractionVisitor
+StormTrooper +-- StormTrooperInteractionVisitor
+GhostInteractionVisitor <|-- StormTrooperInteractionVisitor
 PlayerVisitor <|-- PlayerDeadVisitor
 Pellet <|-- SuperPellet
 PlayerVisitor <|-- PlayerNormalVisitor
@@ -647,9 +672,11 @@ MovableEntity <|-- Ghost
 Ghost +-- GhostInteractionVisitor
 AbstractInteractionVisitor <|-- GhostInteractionVisitor
 Entity <|-- SpeechBubble
-SpeechBubble +-- SpeechSpeechBubbleSprite
-Sprite <|.. SpeechSpeechBubbleSprite
+SpeechBubble +-- SpeechBubbleSprite
+Sprite <|.. SpeechBubbleSprite
 Ghost <|-- BobaFett
+BobaFett +-- BobaFettInteractionVisitor
+GhostInteractionVisitor <|-- BobaFettInteractionVisitor
 Pathfinding +-- Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
@@ -657,8 +684,8 @@ Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
 JFrame <|-- GameFrame
-GameFrame +-- GameKeyListener
-KeyAdapter <|-- GameKeyListener
+GameFrame +-- KeyListener
+KeyAdapter <|-- KeyListener
 Ghost <|-- Sith
 Sith +-- SithInteractionVisitor
 GhostInteractionVisitor <|-- SithInteractionVisitor
@@ -674,7 +701,7 @@ AbstractInteractionVisitor <|-- PlayerVisitor
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
-GameWindow +-- GameInstanceHolder
+GameWindow +-- InstanceHolder
 Ghost <|-- Vader
 Vader +-- VaderInteractionVisitor
 GhostInteractionVisitor <|-- VaderInteractionVisitor

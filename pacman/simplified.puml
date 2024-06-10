@@ -15,8 +15,11 @@ skinparam ClassAttributeFontSize 20
 remove EntityTask
 remove Node
 remove GameKeyListener
+remove KeyListener
+remove InstanceHolder
+remove SpecialRender
 remove GameInstanceHolder
-remove *Storm*
+remove *Storm
 remove Level*
 remove *Cell*
 remove *Sprite*
@@ -90,7 +93,7 @@ Player -- PlayerVisitor: handler >
 'TODO: should we delete PlayerVisitor
 
 'Delete subclasses prefix ending in $
-' [A-Z][a-z]+\$
+' ([A-Z][a-z]+){1,4}\$
 
 ' ENDSTATIC
 class PlayerInvincibleVisitor {
@@ -115,12 +118,20 @@ class GroundCell {
 
 class StormTrooper {
 	- handler: InteractionVisitor
+	- teleporting: boolean
 	+ accept(v: InteractionVisitor): void
+	+ teleportRandomly(): void
+	- isNearPlayer(cell: Cell): boolean
+	+ triggerTeleport(): void
+	+ hasSpecialRendering(): boolean
+	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
 }
 
 
-class StormStormTrooperInteractionVisitor {
+class StormTrooperInteractionVisitor {
+	+ visit(sith: Sith): void
 }
+
 class PlayerDeadVisitor {
 	+ isScary(): boolean
 	+ isInteractable(): boolean
@@ -222,7 +233,7 @@ class SpeechBubble {
 }
 
 
-class SpeechSpeechBubbleSprite {
+class SpeechBubbleSprite {
 	- lastUpdate: long
 	- opacity: int
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
@@ -268,12 +279,18 @@ interface InteractionVisitor {
 }
 
 class BobaFett {
+	- handler: InteractionVisitor
 	- moveInterval: int
 	+ moveFaster(): void
 	+ getMoveInterval(): int
 	+ accept(v: InteractionVisitor): void
 }
 
+
+class BobaFettInteractionVisitor {
+	+ visit(superPellet: SuperPellet): void
+	+ visit(player: Player): void
+}
 
 interface Interactable {
 	+ accept(v: InteractionVisitor): void
@@ -357,10 +374,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ w(): int
+	+ y(): int
 	+ x(): int
 	+ h(): int
-	+ y(): int
+	+ w(): int
 }
 
 
@@ -385,7 +402,7 @@ class GameFrame {
 }
 
 
-class GameKeyListener {
+class KeyListener {
 	- keybindings: Map<Integer,Consumer<Level>>
 	+ keyPressed(e: KeyEvent): void
 }
@@ -424,6 +441,11 @@ class Luke {
 
 class LukeInteractionVisitor {
 }
+interface SpecialRender {
+	+ renderSpecial(g: Graphics2D, x: int, y: int, width: int, height: int): void
+	+ hasSpecialRendering(): boolean
+}
+
 abstract class SpriteRegister {
 }
 
@@ -499,7 +521,7 @@ class GameWindow {
 }
 
 
-class GameInstanceHolder {
+class InstanceHolder {
 }
 
 class Vader {
@@ -567,6 +589,7 @@ class AnimatedSprite {
 	+ restart(): void
 	+ start(): void
 	+ stop(): void
+	+ isAnimating(): boolean
 	+ startBlinking(): void
 	+ stopBlinking(): void
 	- updateBlinking(): void
@@ -574,6 +597,7 @@ class AnimatedSprite {
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
 	+ getWidth(): int
 	+ getHeight(): int
+	+ getCurrentFrameStep(): int
 }
 
 
@@ -581,8 +605,9 @@ class AnimatedSprite {
 
 PlayerVisitor <|-- PlayerInvincibleVisitor
 Cell <|-- GroundCell
-StormTrooper +-- StormStormTrooperInteractionVisitor
-GhostInteractionVisitor <|-- StormStormTrooperInteractionVisitor
+SpecialRender <|.. StormTrooper
+StormTrooper +-- StormTrooperInteractionVisitor
+GhostInteractionVisitor <|-- StormTrooperInteractionVisitor
 PlayerVisitor <|-- PlayerDeadVisitor
 Pellet <|-- SuperPellet
 PlayerVisitor <|-- PlayerNormalVisitor
@@ -594,8 +619,10 @@ MovableEntity <|-- Ghost
 Ghost +-- GhostInteractionVisitor
 AbstractInteractionVisitor <|-- GhostInteractionVisitor
 Entity <|-- SpeechBubble
-SpeechBubble +-- SpeechSpeechBubbleSprite
-Sprite <|.. SpeechSpeechBubbleSprite
+SpeechBubble +-- SpeechBubbleSprite
+Sprite <|.. SpeechBubbleSprite
+BobaFett +-- BobaFettInteractionVisitor
+GhostInteractionVisitor <|-- BobaFettInteractionVisitor
 Pathfinding +-- Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
@@ -603,8 +630,8 @@ Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
 JFrame <|-- GameFrame
-GameFrame +-- GameKeyListener
-KeyAdapter <|-- GameKeyListener
+GameFrame +-- KeyListener
+KeyAdapter <|-- KeyListener
 Sith +-- SithInteractionVisitor
 GhostInteractionVisitor <|-- SithInteractionVisitor
 Entity <|-- MovableEntity
@@ -618,7 +645,7 @@ AbstractInteractionVisitor <|-- PlayerVisitor
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
-GameWindow +-- GameInstanceHolder
+GameWindow +-- InstanceHolder
 Vader +-- VaderInteractionVisitor
 GhostInteractionVisitor <|-- VaderInteractionVisitor
 Interactable <|.. Entity
