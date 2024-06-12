@@ -6,6 +6,7 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.RegionOfInterest;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.awt.*;
 
 public class SpeechBubble extends Entity {
@@ -45,7 +46,7 @@ public class SpeechBubble extends Entity {
 
             g2d.setComposite(AlphaComposite.SrcOver.derive(opacity / 255f));
 
-            Font font = new Font("Monospaced", Font.PLAIN, 10);
+            Font font = new Font("Monospaced", Font.PLAIN, 12);
             FontMetrics fm = g2d.getFontMetrics(font);
 
             // draw box with a little padding based on text width and height
@@ -74,7 +75,7 @@ public class SpeechBubble extends Entity {
             long now = System.currentTimeMillis();
             if (now - lastUpdate > OPACITY_INTERVAL) {
                 lastUpdate = now;
-                opacity -= 3;
+                opacity -= 2;
             }
 
             if (opacity <= 0) {
