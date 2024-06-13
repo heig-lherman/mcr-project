@@ -27,7 +27,7 @@ public abstract class Ghost extends MovableEntity implements Interactor {
 
     protected Ghost(Cell initialCell, int pathUpdateInterval) {
         super(initialCell);
-        this.pathUpdateInterval = pathUpdateInterval;
+        this.pathUpdateInterval = pathUpdateInterval + 8;
     }
 
     abstract Map<Direction, AnimatedSprite> getEdibleSprites();

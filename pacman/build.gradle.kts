@@ -19,6 +19,6 @@ tasks.test {
 }
 
 task("run", JavaExec::class) {
-    mainClass = "heig.mcr.visitor.Main"
+    mainClass.set("heig.mcr.visitor.Main")
     classpath = sourceSets["main"].runtimeClasspath
 }
