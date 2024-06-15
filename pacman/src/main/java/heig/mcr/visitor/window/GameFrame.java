@@ -1,6 +1,7 @@
 package heig.mcr.visitor.window;
 
 import heig.mcr.visitor.game.Level;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -12,6 +13,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * The main frame for the game. It contains the level panel and the button panel.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class GameFrame extends JFrame {
 
     private static final int FRAME_RATE = 24;

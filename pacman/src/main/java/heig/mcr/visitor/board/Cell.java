@@ -2,8 +2,17 @@ package heig.mcr.visitor.board;
 
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.util.*;
 
+/**
+ * A cell is a place on the board where entities can be placed.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public abstract class Cell {
 
     private final Set<Entity> occupants = new HashSet<>();

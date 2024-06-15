@@ -2,8 +2,17 @@ package heig.mcr.visitor.math;
 
 import heig.mcr.visitor.board.Cell;
 import heig.mcr.visitor.board.Entity;
+
 import java.util.*;
 
+/**
+ * A utility class for pathfinding algorithms.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public final class Pathfinding {
 
     /**

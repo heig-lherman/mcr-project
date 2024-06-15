@@ -10,6 +10,14 @@ import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.Sprite;
 
+/**
+ * The player controlled by the user.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class Player extends MovableEntity implements Interactor {
 
     private static final int DEFAULT_INTERVAL = 300;

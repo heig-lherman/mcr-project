@@ -3,6 +3,14 @@ package heig.mcr.visitor.game.actor.handler;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.BobaFett;
 
+/**
+ * A visitor for the player when he is in normal state.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class PlayerNormalVisitor extends PlayerVisitor {
 
     public PlayerNormalVisitor(Player player) {

@@ -5,6 +5,14 @@ import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.*;
 
+/**
+ * Visitor pattern for interactions between actors.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public interface InteractionVisitor {
 
     void visit(Player player);

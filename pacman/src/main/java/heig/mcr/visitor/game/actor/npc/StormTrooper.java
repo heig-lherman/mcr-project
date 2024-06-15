@@ -16,6 +16,14 @@ import heig.mcr.visitor.window.sprite.Sprite;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * A ghost representing a Storm Trooper.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class StormTrooper extends Ghost implements SpecialRender {
 
     private static final Map<Direction, AnimatedSprite> EDIBLE_SPRITES = PacmanSprites.getInstance().getEdibleStormTrooper();

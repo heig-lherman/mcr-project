@@ -6,9 +6,18 @@ import heig.mcr.visitor.board.Entity;
 import heig.mcr.visitor.game.Level;
 import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.window.sprite.SpecialRender;
+
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A panel that displays a level.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class LevelPanel extends JPanel {
 
     public static final int SQUARE_SIZE = 32;
@@ -67,7 +76,7 @@ public class LevelPanel extends JPanel {
     private void renderCell(Cell cell, Graphics2D g, int x, int y, int width, int height) {
         cell.getSprite().draw(g, x, y, width, height);
         for (Entity occupant : cell.getOccupants()) {
-            if(occupant.getSprite() != null){
+            if (occupant.getSprite() != null) {
                 occupant.getSprite().draw(g, x, y, width, height);
             }
             if (occupant instanceof SpecialRender sr && sr.hasSpecialRendering()) {

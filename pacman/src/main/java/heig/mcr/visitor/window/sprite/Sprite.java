@@ -6,6 +6,11 @@ import java.awt.*;
 
 /**
  * A sprite is a visual representation of an entity.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public interface Sprite {
 

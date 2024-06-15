@@ -1,8 +1,17 @@
 package heig.mcr.visitor.board;
 
 import heig.mcr.visitor.math.Direction;
+
 import java.util.stream.Stream;
 
+/**
+ * A board is a grid of cells where entities are stored.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public final class Board {
 
     private final Cell[][] cells;

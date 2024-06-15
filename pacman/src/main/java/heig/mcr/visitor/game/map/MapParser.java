@@ -2,12 +2,21 @@ package heig.mcr.visitor.game.map;
 
 import heig.mcr.visitor.game.Level;
 import heig.mcr.visitor.game.actor.npc.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Predicate;
 
+/**
+ * A parser for maps, to create a level from a map file.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public final class MapParser {
 
     private MapParser() {

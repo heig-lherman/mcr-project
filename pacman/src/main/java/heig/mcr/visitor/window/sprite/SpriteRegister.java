@@ -7,6 +7,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A register that loads and caches sprites.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public abstract class SpriteRegister {
 
     private final Map<String, Sprite> spriteCache = new HashMap<>();

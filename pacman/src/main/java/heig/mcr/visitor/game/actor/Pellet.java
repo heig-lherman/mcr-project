@@ -6,6 +6,14 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.window.sprite.Sprite;
 
+/**
+ * A pellet that can be eaten by the player to increase the score.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class Pellet extends Entity {
 
     public Pellet(Cell initialCell) {

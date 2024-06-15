@@ -10,10 +10,19 @@ import heig.mcr.visitor.game.actor.npc.Ghost;
 import heig.mcr.visitor.game.board.DoorCell;
 import heig.mcr.visitor.game.board.GroundCell;
 import heig.mcr.visitor.game.board.WallCell;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * A builder for levels, to create a level programmatically.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class LevelBuilder {
 
     private final Cell[][] cells;

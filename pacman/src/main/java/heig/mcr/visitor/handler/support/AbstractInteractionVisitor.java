@@ -6,6 +6,15 @@ import heig.mcr.visitor.game.actor.SuperPellet;
 import heig.mcr.visitor.game.actor.npc.*;
 import heig.mcr.visitor.handler.InteractionVisitor;
 
+/**
+ * Abstract implementation of the InteractionVisitor interface, providing empty implementations for all methods.
+ * This allows to only override the methods that are needed.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public abstract class AbstractInteractionVisitor implements InteractionVisitor {
 
     @Override

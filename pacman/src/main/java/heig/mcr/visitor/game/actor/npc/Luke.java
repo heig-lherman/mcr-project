@@ -6,8 +6,17 @@ import heig.mcr.visitor.game.sprite.PacmanSprites;
 import heig.mcr.visitor.handler.InteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
+
 import java.util.Map;
 
+/**
+ * A ghost representing Luke.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class Luke extends Ghost {
 
     private static final Map<Direction, AnimatedSprite> SPRITES = PacmanSprites.getInstance().getLuke();

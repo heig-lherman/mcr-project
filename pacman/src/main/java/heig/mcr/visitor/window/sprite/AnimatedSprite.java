@@ -1,8 +1,17 @@
 package heig.mcr.visitor.window.sprite;
 
 import heig.mcr.visitor.math.RegionOfInterest;
+
 import java.awt.*;
 
+/**
+ * An animated sprite displays an entity using a sequence of images.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class AnimatedSprite implements Sprite {
     private static final Sprite ANIMATION_END = new DefaultSprite();
     private static final int DEFAULT_BLINK_DELAY = 80;
@@ -38,10 +47,6 @@ public class AnimatedSprite implements Sprite {
         this.looping = looping;
         this.animating = animating;
         this.blinking = blinking;
-
-        this.currentFrame = 0;
-        this.lastUpdate = System.currentTimeMillis();
-        this.lastBlink = System.currentTimeMillis();
     }
 
     public AnimatedSprite(Sprite[] frames, int delay, boolean looping) {

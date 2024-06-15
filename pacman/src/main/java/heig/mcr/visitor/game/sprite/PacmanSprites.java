@@ -5,9 +5,19 @@ import heig.mcr.visitor.math.RegionOfInterest;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
 import heig.mcr.visitor.window.sprite.SpriteRegister;
+
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * A sprite register for the Pacman game.
+ * It loads all the sprites needed for the game.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public final class PacmanSprites extends SpriteRegister {
 
     private static final int ANIMATION_DELAY = 100;

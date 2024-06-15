@@ -9,6 +9,14 @@ import heig.mcr.visitor.window.sprite.Sprite;
 
 import java.awt.*;
 
+/**
+ * A speech bubble that can be displayed above an entity.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class SpeechBubble extends Entity {
 
     private final String text;

@@ -5,11 +5,20 @@ import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.map.MapParser;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.GameFrame;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * The main window of the game. It is a singleton that contains the current level and the player.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class GameWindow implements Level.LevelObserver {
 
     private static final class InstanceHolder {

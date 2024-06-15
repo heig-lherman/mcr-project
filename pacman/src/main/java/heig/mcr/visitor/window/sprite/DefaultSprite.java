@@ -6,6 +6,11 @@ import java.awt.*;
 
 /**
  * A default sprite, draws nothing.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public class DefaultSprite implements Sprite {
 

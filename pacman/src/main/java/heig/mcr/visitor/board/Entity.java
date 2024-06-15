@@ -6,6 +6,11 @@ import heig.mcr.visitor.window.sprite.Sprite;
 
 /**
  * An entity is placed on the board.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public abstract class Entity implements Interactable {
 

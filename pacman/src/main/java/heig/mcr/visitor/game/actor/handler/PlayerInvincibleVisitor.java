@@ -3,11 +3,20 @@ package heig.mcr.visitor.game.actor.handler;
 import heig.mcr.visitor.GameWindow;
 import heig.mcr.visitor.game.actor.Player;
 import heig.mcr.visitor.game.actor.npc.*;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A visitor for the player when he is invincible.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public class PlayerInvincibleVisitor extends PlayerVisitor {
 
     private static final int INVINCIBLE_DURATION = 10;

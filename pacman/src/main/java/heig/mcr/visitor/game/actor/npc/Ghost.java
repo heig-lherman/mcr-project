@@ -11,10 +11,20 @@ import heig.mcr.visitor.math.Pathfinding;
 import heig.mcr.visitor.math.RandomGenerator;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract class for ghosts and their interactions.
+ * Ghosts are NPCs that can move and interact with the player, their movement is based on pathfinding to the player.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public abstract class Ghost extends MovableEntity implements Interactor {
 
     private List<Direction> pathToTarget = Collections.emptyList();

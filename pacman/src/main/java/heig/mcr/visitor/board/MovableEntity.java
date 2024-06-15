@@ -3,7 +3,12 @@ package heig.mcr.visitor.board;
 import heig.mcr.visitor.math.Direction;
 
 /**
- * An entity is placed on the board.
+ * An movable entity is an entity that can move on the board at regular intervals.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public abstract class MovableEntity extends Entity {
 

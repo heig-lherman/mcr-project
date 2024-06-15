@@ -8,6 +8,11 @@ package heig.mcr.visitor.math;
  * @param y top left pixel y coordinate in the image coordinate system
  * @param w width in number of pixels
  * @param h height in number of pixels
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public record RegionOfInterest(int x, int y, int w, int h) {
 

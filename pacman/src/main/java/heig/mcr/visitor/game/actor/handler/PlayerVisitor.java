@@ -8,8 +8,17 @@ import heig.mcr.visitor.handler.support.AbstractInteractionVisitor;
 import heig.mcr.visitor.math.Direction;
 import heig.mcr.visitor.window.sprite.AnimatedSprite;
 import heig.mcr.visitor.window.sprite.Sprite;
+
 import java.util.Map;
 
+/**
+ * A visitor for the player, abstract class that will be extended by the different states the player can be in.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public abstract class PlayerVisitor extends AbstractInteractionVisitor {
 
     private final Player player;

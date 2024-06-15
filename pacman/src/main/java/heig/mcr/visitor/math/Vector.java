@@ -5,6 +5,11 @@ package heig.mcr.visitor.math;
  *
  * @param x abscissa
  * @param y ordinate
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
  */
 public record Vector(float x, float y) {
 

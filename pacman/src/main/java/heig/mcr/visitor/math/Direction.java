@@ -1,5 +1,13 @@
 package heig.mcr.visitor.math;
 
+/**
+ * An orientation in 2D space.
+ *
+ * @author Loïc Herman
+ * @author Massimo Stefani
+ * @author Samuel Roland
+ * @author Timothée Van Hove
+ */
 public enum Direction {
     UP(new Vector(0.0f, -1.0f)),
     RIGHT(new Vector(1.0f, 0.0f)),
