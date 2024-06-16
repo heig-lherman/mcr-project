@@ -356,14 +356,6 @@ class Vector {
 }
 
 
-class ColorSprite {
-	- color: Color
-	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ getWidth(): int
-	+ getHeight(): int
-}
-
-
 class RegionOfInterest {
 	- x: int
 	- y: int
@@ -373,10 +365,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ y(): int
+	+ w(): int
 	+ x(): int
 	+ h(): int
-	+ w(): int
+	+ y(): int
 }
 
 
@@ -450,6 +442,19 @@ abstract class SpriteRegister {
 
 class ButtonPanel {
 }
+abstract class PlayerVisitor {
+	# getPlayer(): Player
+	# setRedSprites(): void
+	+ {abstract}isScary(): boolean
+	+ {abstract}isInteractable(): boolean
+	+ {abstract}eatSuperPellet(): void
+	+ {abstract}kill(): void
+	+ dispose(): void
+	+ visit(pellet: Pellet): void
+	+ visit(superPellet: SuperPellet): void
+}
+
+
 class Player {
 	- requestedDirection: Direction
 	- moveInterval: int
@@ -462,19 +467,6 @@ class Player {
 	+ getNextMove(): Direction
 	+ kill(): void
 	+ accept(v: InteractionVisitor): void
-}
-
-
-abstract class PlayerVisitor {
-	# getPlayer(): Player
-	# setRedSprites(): void
-	+ {abstract}isScary(): boolean
-	+ {abstract}isInteractable(): boolean
-	+ {abstract}eatSuperPellet(): void
-	+ {abstract}kill(): void
-	+ dispose(): void
-	+ visit(pellet: Pellet): void
-	+ visit(superPellet: SuperPellet): void
 }
 
 
@@ -622,7 +614,6 @@ GhostInteractionVisitor <|-- BobaFettInteractionVisitor
 Pathfinding +-- Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
-Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
 JFrame <|-- GameFrame
@@ -635,9 +626,9 @@ InteractionVisitor <|.. AbstractInteractionVisitor
 Luke +-- LukeInteractionVisitor
 GhostInteractionVisitor <|-- LukeInteractionVisitor
 JPanel <|-- ButtonPanel
+AbstractInteractionVisitor <|-- PlayerVisitor
 Interactor <|.. Player
 MovableEntity <|-- Player
-AbstractInteractionVisitor <|-- PlayerVisitor
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow

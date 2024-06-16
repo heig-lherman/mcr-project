@@ -12,18 +12,16 @@ skinparam nodesep 20
 remove Main
 
 ' Layout arrangement to make a way smaller image
-DefaultSprite -[hidden]d- ColorSprite
-ColorSprite -[hidden]- ImageSprite
-DefaultSprite -[hidden] AnimatedSprite
-PacmanSprites -[hidden]- Vector
-PacmanSprites -[hidden]- RegionOfInterest
-RegionOfInterest -[hidden] Vector
-Node -[hidden]- SpriteRegister
-SpriteRegister -[hidden] Level
-RandomGenerator -[hidden] RegionOfInterest
-MapParser -[hidden] RegionOfInterest
-Board -[hidden] Node
-KeyListener -[hidden]- Sprite
+' DefaultSprite -[hidden] AnimatedSprite
+' PacmanSprites -[hidden]- Vector
+' PacmanSprites -[hidden]- RegionOfInterest
+' RegionOfInterest -[hidden] Vector
+' Node -[hidden]- SpriteRegister
+' SpriteRegister -[hidden] Level
+' RandomGenerator -[hidden] RegionOfInterest
+' MapParser -[hidden] RegionOfInterest
+' Board -[hidden] Node
+' KeyListener -[hidden]- Sprite
 
 ' REMOVE
 '#General remove diagrams
@@ -34,88 +32,87 @@ KeyListener -[hidden]- Sprite
 'Missing links with associated deletions
 Entity -> Cell: initial >
 Cell "1"-left"*" Entity: occupants >
-' - initialCell:.*\n
-' - cell: Cell\n
-' - occupants:.*\n
+' \t- initialCell:.*\n
+' \t- cell: Cell\n
+' \t- occupants:.*\n
 
-Cell "todo"-"*" Cell: neighbors >
-' - neighbors:.*\n
+Cell "*"-"*" Cell: neighbors >
+' \t- neighbors:.*\n
 
 Entity "1"-left>"1" Direction: direction >
-' - direction: Direction\n
+' \t- direction: Direction\n
 
 Board "1"-d->"*" Cell: cells >
 LevelBuilder "1"-d->"*" Cell: cells >
-' - cells: Cell\[\]\[\]
+' \t- cells: Cell\[\]\[\]
 
 LevelBuilder "1"-d>"*" Ghost: ghosts >
-' - ghosts: .*\n
+' \t- ghosts: .*\n
 
 LevelBuilder "1"-d>"*" Player: players >
 Level "1"-d>"*" Player: players >
-' - players: .*\n
+' \t- players: .*\n
 
 Player "1"-"1" PlayerVisitor
-' - handler: PlayerVisitor\n
+' \t- handler: PlayerVisitor\n
 
 Player "1"-"1" Direction: requestedDirection >
-' - requestedDirection: Direction\n
+' \t- requestedDirection: Direction\n
 
 Direction "1"-"1" Vector: direction >
-' - direction: Vector\n
+' \t- direction: Vector\n
 
 StormTrooper "1"-"1" InteractionVisitor: handler >
 BobaFett "1"-"1" InteractionVisitor: handler >
 Sith "1"-"1" InteractionVisitor: handler >
 Luke "1"-"1" InteractionVisitor: handler >
 Vader "1"-"1" InteractionVisitor: handler >
-' - handler: InteractionVisitor\n
+' \t- handler: InteractionVisitor\n
 
 AnimatedSprite "1"-"*" Sprite: frames >
-' - frames:.*\n
+' \t- frames:.*\n
 
 PlayerDeadVisitor "1"-"1" AnimatedSprite: deathSprites >
-' - deathSprites: AnimatedSprite
+' \t- deathSprites: AnimatedSprite
 
 SpriteRegister "1"-"*" Sprite: spriteCache >
-' - spriteCache:.*\n
+' \t- spriteCache:.*\n
 
 Ghost "1"-"*" Direction: pathToTarget >
-' - pathToTarget:.*\n
+' \t- pathToTarget:.*\n
 
 GameFrame "1"-"1" LevelPanel: panel >
-' - panel: LevelPanel\n
+' \t- panel: LevelPanel\n
 
 LevelPanel "1"-"1" Level: level >
 GameWindow "1"-"1" Player: player >
 GameWindow "1"-"1" Level: level >
 GameWindow "1"-"1" GameFrame: frame >
-' - player: Player\n
-' - level: Level\n
-' - frame: GameFrame\n
+' \t- player: Player\n
+' \t- level: Level\n
+' \t- frame: GameFrame\n
 
 StormTrooper "1"-"*" AnimatedSprite: teleportSprite >
-' - teleportSprite:.*\n
+' \t- teleportSprite:.*\n
 
 SpeechBubble "1"-"1" Sprite: sprite >
-' - sprite: Sprite\n
+' \t- sprite: Sprite\n
 
 PlayerVisitor "1"-"1" Player: player >
-' - player: Player
+' \t- player: Player
 
 Level "1"-"*" LevelObserver: observers >
-' - observers: List<LevelObserver>\n
+' \t- observers: List<LevelObserver>\n
 
 Node "1"-"1" Direction: direction >
 Node "1"-"1" Cell: cell >
 Node "1"-"0..1" Node: parent >
-' ~ direction: Direction\n
-' ~ cell: Cell\n
-' ~ parent: Node\n
+' \t~ direction: Direction\n
+' \t~ cell: Cell\n
+' \t~ parent: Node\n
 
-' TODO: finish this
-PlayerVisitor "1"-"1" Direction: direction >
-' - sprites: Map<Direction,AnimatedSprite>
+PlayerVisitor "1"-"1" AnimatedSprite: sprites >
+' \t- sprites: Map<Direction,AnimatedSprite>
 
 ' ENDSTATIC
 class PlayerInvincibleVisitor {
@@ -146,7 +143,7 @@ class GroundCell {
 class StormTrooper {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
-			- teleporting: boolean
+	- teleporting: boolean
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
@@ -164,7 +161,7 @@ class StormTrooper {
 class StormTrooperInteractionVisitor {
 }
 class PlayerDeadVisitor {
-	
+
 	+ isScary(): boolean
 	+ isInteractable(): boolean
 	+ eatSuperPellet(): void
@@ -183,7 +180,7 @@ class Main {
 }
 
 abstract class Cell {
-			+ getNeighbor(direction: Direction): Cell
+	+ getNeighbor(direction: Direction): Cell
 	+ linkNeighbor(direction: Direction, cell: Cell): void
 	+ getOccupants(): Collection<Entity>
 	+ addOccupant(entity: Entity): void
@@ -206,7 +203,7 @@ class Level {
 	- startLock: Object
 	- board: Board
 	- entityThreads: Map<MovableEntity,ScheduledExecutorService>
-			- running: boolean
+	- running: boolean
 	+ getBoard(): Board
 	+ getPlayer(index: int): Player
 	+ isRunning(): boolean
@@ -237,7 +234,7 @@ interface LevelObserver {
 }
 
 abstract class Ghost {
-		- pathIndex: int
+	- pathIndex: int
 	- moveCounter: int
 	- blinking: boolean
 	- goingHome: boolean
@@ -262,7 +259,7 @@ class GhostInteractionVisitor {
 
 class SpeechBubble {
 	- text: String
-		+ getSprite(): Sprite
+	+ getSprite(): Sprite
 	+ getLayer(): int
 	+ accept(v: InteractionVisitor): void
 }
@@ -289,7 +286,7 @@ enum Direction {
 	+ RIGHT: 
 	+ DOWN: 
 	+ LEFT: 
-		+ dx(): int
+	+ dx(): int
 	+ dy(): int
 	+ opposite(): Direction
 	+ toVector(): Vector
@@ -320,7 +317,7 @@ interface InteractionVisitor {
 class BobaFett {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
-		- moveInterval: int
+	- moveInterval: int
 	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ moveFaster(): void
@@ -346,7 +343,7 @@ class Pathfinding {
 }
 
 class Node {
-				~ getPath(): List<Direction>
+	~ getPath(): List<Direction>
 }
 
 
@@ -400,15 +397,6 @@ class Vector {
 }
 
 
-class ColorSprite {
-	- color: Color
-	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
-	+ slice(roi: RegionOfInterest): Sprite
-	+ getWidth(): int
-	+ getHeight(): int
-}
-
-
 class RegionOfInterest {
 	- x: int
 	- y: int
@@ -418,10 +406,10 @@ class RegionOfInterest {
 	+ x2(): int
 	+ y1(): int
 	+ y2(): int
-	+ y(): int
+	+ w(): int
 	+ x(): int
 	+ h(): int
-	+ w(): int
+	+ y(): int
 }
 
 
@@ -444,7 +432,7 @@ class MapParser {
 
 class GameFrame {
 	- {static} FRAME_RATE: int
-		+ start(): void
+	+ start(): void
 }
 
 
@@ -457,7 +445,7 @@ class KeyListener {
 class Sith {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
-		~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
@@ -488,7 +476,7 @@ abstract class AbstractInteractionVisitor {
 
 class Luke {
 	- {static} SPRITES: Map<Direction,AnimatedSprite>
-		~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
@@ -504,7 +492,7 @@ interface SpecialRender {
 }
 
 abstract class SpriteRegister {
-		+ loadSprite(resource: String): Sprite
+	+ loadSprite(resource: String): Sprite
 	+ createAnimation(resource: Sprite, frames: int, delay: int, loop: boolean): AnimatedSprite
 	- loadResource(resource: String): Sprite
 }
@@ -512,9 +500,24 @@ abstract class SpriteRegister {
 
 class ButtonPanel {
 }
+abstract class PlayerVisitor {
+
+	# getPlayer(): Player
+	+ getSprite(): Sprite
+	# setRedSprites(): void
+	+ {abstract}isScary(): boolean
+	+ {abstract}isInteractable(): boolean
+	+ {abstract}eatSuperPellet(): void
+	+ {abstract}kill(): void
+	+ dispose(): void
+	+ visit(pellet: Pellet): void
+	+ visit(superPellet: SuperPellet): void
+}
+
+
 class Player {
 	- {static} DEFAULT_INTERVAL: int
-			- moveInterval: int
+	- moveInterval: int
 	+ isAlive(): boolean
 	+ isScary(): boolean
 	+ getSprite(): Sprite
@@ -531,21 +534,6 @@ class Player {
 }
 
 
-abstract class PlayerVisitor {
-    - sprites: Map<Direction,AnimatedSprite>
-	# getPlayer(): Player
-	+ getSprite(): Sprite
-	# setRedSprites(): void
-	+ {abstract}isScary(): boolean
-	+ {abstract}isInteractable(): boolean
-	+ {abstract}eatSuperPellet(): void
-	+ {abstract}kill(): void
-	+ dispose(): void
-	+ visit(pellet: Pellet): void
-	+ visit(superPellet: SuperPellet): void
-}
-
-
 class ImageSprite {
 	- image: Image
 	+ draw(graphics: Graphics, x: int, y: int, width: int, height: int): void
@@ -556,7 +544,7 @@ class ImageSprite {
 
 
 class Board {
-	
+
 	+ streamCells(): Stream<Cell>
 	+ getWidth(): int
 	+ getHeight(): int
@@ -568,7 +556,7 @@ class Board {
 
 class LevelPanel {
 	+ {static} SQUARE_SIZE: int
-		+ getLevel(): Level
+	+ getLevel(): Level
 	# paintComponent(g: Graphics): void
 	- render(board: Board, g: Graphics2D): void
 	- renderCell(cell: Cell, g: Graphics2D, x: int, y: int, width: int, height: int): void
@@ -576,7 +564,7 @@ class LevelPanel {
 
 
 class GameWindow {
-				+ begin(): void
+	+ begin(): void
 	+ getActiveLevel(): Level
 	+ onLevelWon(): void
 	+ onLevelLost(): void
@@ -591,7 +579,7 @@ class InstanceHolder {
 class Vader {
 	- {static} EDIBLE_SPRITES: Map<Direction,AnimatedSprite>
 	- {static} INVINCIBLE_SPRITES: Map<Direction,AnimatedSprite>
-		~ getEdibleSprites(): Map<Direction,AnimatedSprite>
+	~ getEdibleSprites(): Map<Direction,AnimatedSprite>
 	~ getInvincibleSprites(): Map<Direction,AnimatedSprite>
 	+ accept(v: InteractionVisitor): void
 	+ interactWith(other: Interactable): void
@@ -612,8 +600,8 @@ interface Sprite {
 
 abstract class Entity {
 	- {static} SPEECH_DEBOUNCE: int
-			- lastSpeech: long
-		+ getDirection(): Direction
+	- lastSpeech: long
+	+ getDirection(): Direction
 	+ setDirection(direction: Direction): void
 	+ getInitialCell(): Cell
 	+ getCell(): Cell
@@ -653,8 +641,8 @@ class PacmanSprites {
 
 
 class LevelBuilder {
-	
-			+ {static} start(width: int, height: int): LevelBuilder
+
+	+ {static} start(width: int, height: int): LevelBuilder
 	+ addWall(x: int, y: int): LevelBuilder
 	+ addGround(x: int, y: int): LevelBuilder
 	+ addDoor(x: int, y: int): LevelBuilder
@@ -670,7 +658,7 @@ class AnimatedSprite {
 	- {static} ANIMATION_END: Sprite
 	- {static} DEFAULT_BLINK_DELAY: int
 	- visible: boolean
-		- delay: int
+	- delay: int
 	- currentFrame: int
 	- looping: boolean
 	- animating: boolean
@@ -722,7 +710,6 @@ GhostInteractionVisitor <|-- BobaFettInteractionVisitor
 Pathfinding +-- Node
 Sprite <|.. DefaultSprite
 Cell <|-- WallCell
-Sprite <|.. ColorSprite
 Cell <|-- DoorCell
 Entity <|-- Pellet
 JFrame <|-- GameFrame
@@ -737,9 +724,9 @@ Ghost <|-- Luke
 Luke +-- LukeInteractionVisitor
 GhostInteractionVisitor <|-- LukeInteractionVisitor
 JPanel <|-- ButtonPanel
+AbstractInteractionVisitor <|-- PlayerVisitor
 Interactor <|.. Player
 MovableEntity <|-- Player
-AbstractInteractionVisitor <|-- PlayerVisitor
 Sprite <|.. ImageSprite
 JPanel <|-- LevelPanel
 LevelObserver <|.. GameWindow
