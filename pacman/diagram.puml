@@ -6,22 +6,9 @@
 ' Style
 hide empty members
 skinparam classAttributeIconSize 0
-skinparam nodesep 20
 
 ' Additions
 remove Main
-
-' Layout arrangement to make a way smaller image
-' DefaultSprite -[hidden] AnimatedSprite
-' PacmanSprites -[hidden]- Vector
-' PacmanSprites -[hidden]- RegionOfInterest
-' RegionOfInterest -[hidden] Vector
-' Node -[hidden]- SpriteRegister
-' SpriteRegister -[hidden] Level
-' RandomGenerator -[hidden] RegionOfInterest
-' MapParser -[hidden] RegionOfInterest
-' Board -[hidden] Node
-' KeyListener -[hidden]- Sprite
 
 ' REMOVE
 '#General remove diagrams
@@ -53,7 +40,7 @@ LevelBuilder "1"-d>"*" Player: players >
 Level "1"-d>"*" Player: players >
 ' \t- players: .*\n
 
-Player "1"-"1" PlayerVisitor
+Player "1"-"1" PlayerVisitor: handler >
 ' \t- handler: PlayerVisitor\n
 
 Player "1"-"1" Direction: requestedDirection >
@@ -62,11 +49,11 @@ Player "1"-"1" Direction: requestedDirection >
 Direction "1"-"1" Vector: direction >
 ' \t- direction: Vector\n
 
-StormTrooper "1"-"1" InteractionVisitor: handler >
-BobaFett "1"-"1" InteractionVisitor: handler >
-Sith "1"-"1" InteractionVisitor: handler >
-Luke "1"-"1" InteractionVisitor: handler >
-Vader "1"-"1" InteractionVisitor: handler >
+StormTrooper "1"-u-"1" InteractionVisitor: handler >
+BobaFett "1"-u-"1" InteractionVisitor: handler >
+Sith "1"-u-"1" InteractionVisitor: handler >
+Luke "1"-u-"1" InteractionVisitor: handler >
+Vader "1"-u-"1" InteractionVisitor: handler >
 ' \t- handler: InteractionVisitor\n
 
 AnimatedSprite "1"-"*" Sprite: frames >
@@ -81,7 +68,7 @@ SpriteRegister "1"-"*" Sprite: spriteCache >
 Ghost "1"-"*" Direction: pathToTarget >
 ' \t- pathToTarget:.*\n
 
-GameFrame "1"-"1" LevelPanel: panel >
+GameFrame "1"--"1" LevelPanel: panel >
 ' \t- panel: LevelPanel\n
 
 LevelPanel "1"-"1" Level: level >
